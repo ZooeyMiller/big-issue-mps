@@ -24,18 +24,22 @@ fetch('https://mapit.mysociety.org/postcode/po383de')
           .then(res => {
             res.forEach(e => {
               e.json().then(candidate => {
+                console.log(candidate.name, '----', candidate);
                 const party = findParty(candidate);
                 if (party) {
                   candidateArray.push({
                     party,
                     name: candidate.name,
                     email: candidate.email,
+                    photo: `https://candidates.democracyclub.org.uk/${candidate.images[0].image_url}`,
                   });
                 }
               });
             });
           })
-          .then(() => console.log(candidateArray));
+          .then(() => {
+            appendToDom(candidateArray);
+          });
       });
   });
 
@@ -47,4 +51,23 @@ const findParty = ({ memberships }) => {
     return generalElection.on_behalf_of.name;
   }
   return false;
+};
+
+const appendToDom = array => {
+  array.forEach(candidate => {
+    const container = document.createElement('div');
+    const name = document.createElement('p');
+    const party = document.createElement('p');
+    const email = document.createElement('p');
+    const photo = document.createElement('img');
+    name.innerText = candidate.name;
+    party.innerText = candidate.party;
+    email.innerText = candidate.email;
+    photo.src = candidate.photo;
+    container.appendChild(name);
+    container.appendChild(email);
+    container.appendChild(party);
+    container.appendChild(photo);
+    document.querySelector('body').appendChild(container);
+  });
 };
