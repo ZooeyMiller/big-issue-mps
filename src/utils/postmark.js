@@ -11,19 +11,21 @@ const client = new postmark.Client(process.env.POSTMARK_API);
  * @param  {String} body    Body TextBody
  */
 const mailOut = (to, from, subject, body) => {
-  const emails = to.map(address => ({
-    From: 'activist@activistarmy.co.uk',
-    To: address,
-    ReplyTo: from,
-    Subject: subject,
-    TextBody: body,
-  }));
-  console.log(emails);
+  return new Promise((resolve, reject) => {
+    const emails = to.map(address => ({
+      From: 'activist@activistarmy.co.uk',
+      To: address,
+      ReplyTo: from,
+      Subject: subject,
+      TextBody: body,
+    }));
+    console.log(emails);
 
-  client.sendEmailBatch(emails, err => {
-    if (err) return console.log(err);
+    client.sendEmailBatch(emails, err => {
+      if (err) reject(err);
 
-    console.log(`Sent mail`);
+      resolve('Emails successfully sent');
+    });
   });
 };
 
