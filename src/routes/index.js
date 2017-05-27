@@ -1,1 +1,1 @@
-module.exports = ['./home', './public'].map(require);
+module.exports = ['./home', './public', './api'].map(require);

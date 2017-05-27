@@ -58,12 +58,12 @@ const buildCandidates = objectArray => {
   return objectArray
     .map(candidate => {
       const party = findParty(candidate);
+      //@TODO add party photo
       if (party) {
         return {
           party,
           name: candidate.name,
           email: candidate.email,
-          photo: `https://candidates.democracyclub.org.uk/${candidate.images[0].image_url}`,
         };
       }
     })
