@@ -96,7 +96,6 @@ function listCandidates(candidates) {
   };
 }
 
-
 function checkboxHandler(event) {
   const index = state.candidates.findIndex(
     candidate => candidate.email === event.target.value
@@ -139,22 +138,29 @@ const makeForm = () => {
   if (state.candidates.every(candidate => !candidate.checked)) {
     submit.classList.add('activist-send--disabled');
   }
+  const userAddition = create('textarea', 'activist--user-contribution');
+  userAddition.placeholder = 'Anything you want to add?';
 
   container.appendChild(submit);
-
+  container.appendChild(userAddition);
   submit.addEventListener('click', event => {
     event.preventDefault();
 
     if (state.candidates.some(candidate => candidate.checked)) {
+      // console.log(userAddition.value);
       const emailArr = state.candidates
         .filter(candidate => candidate.checked)
         .map(candidate => ({ email: candidate.email, name: candidate.name }));
-      sendEmails(emailArr, {
-        email: state.userInfo.email,
-        name: state.userInfo.name,
-      })
-       .then(emailSent)
-      .catch(emailError);
+      sendEmails(
+        emailArr,
+        {
+          email: state.userInfo.email,
+          name: state.userInfo.name,
+        },
+        userAddition.value
+      )
+        .then(emailSent)
+        .catch(emailError);
     }
   });
 };
@@ -176,8 +182,9 @@ function emailError(res) {
   document.getElementById('activist-army-start').scrollIntoView();
   container.innerHTML = '';
   emailTemplate.style.display = 'none';
+  console.log(res);
 
-  if (res.error.findIndex(email => email.ErrorCode === 0) === -1) {
+  if (res.error && res.error.findIndex(email => email.ErrorCode === 0) === -1) {
     const errorHeader = create('h2');
     errorHeader.innerText = 'Error';
     const error = create('p');
@@ -198,16 +205,17 @@ function emailError(res) {
   }
 }
 
-function sendEmails(emailArr, from) {
+function sendEmails(emailArr, from, userInput) {
   return new Promise((reject, resolve) => {
     fetch('/api', {
       method: 'POST',
       body: JSON.stringify({
         emails: [
-          { email: 'finnhodgkin@gmail.com', name: 'Finn' },
-          { email: 'zoo', name: 'zooey' },
+          { email: 'finnhod', name: 'Finn' },
+          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
         ],
         fromEmail: from,
+        userInput,
       }),
     })
       .then(res => res.json())
