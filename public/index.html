@@ -157,20 +157,17 @@
 
       <section id="activist-army-container">
         <form action="" method="post" class="activist-form" id="activist-user-info">
-          <label class="activist-label">
-            Full name
-            <input class="activist-input" type="text" name="name" placeholder="Full name..." required autocomplete="name"/>
-          </label>
-          <label class="activist-label">
-            Email
-            <input class="activist-input" type="text" name="email" placeholder="Email..." required autocomplete="email"/>
-          </label>
-          <label class="activist-label">
-            Postcode
-            <input class="activist-input" type="text" name="postcode" placeholder="Postcode..." required autocomplete="postal-code"/>
-          </label>
+          <label class="activist-label" for="activist-name">Full name</label>
+            <input class="activist-input" type="text" name="name" placeholder="Full name..." required autocomplete="name" id="activist-name"/>
+
+          <label class="activist-label" for="activist-email">Email</label>
+
+            <input class="activist-input" type="text" name="email" placeholder="Email..." required autocomplete="email" id="activist-email"/>
+          <label class="activist-label" for="activist-postcode">Postcode</label>
+
+            <input class="activist-input" type="text" name="postcode" placeholder="Postcode..." required autocomplete="postal-code" id="activist-postcode"/>
           <button type="submit" class="button">Submit</button>
-        </form>  
+        </form>
       </section>
 
       <section id="email-template" class="activist-email-template">
