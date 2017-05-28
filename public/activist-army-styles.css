@@ -19,6 +19,7 @@
   text-align: center;
   position: relative;
   transform: translate(-6px, 6px);
+      transition: all .3s ease-in-out;
 
 }
 
@@ -34,13 +35,6 @@
 }
 
 
-.activist-candidate:first-child {
-  margin-left: 0;
-}
-
-.activist-candidate:last-child {
-  margin-right: 0;
-}
 
 .activist-candidate__photo {
   width: 6.5em;
@@ -100,4 +94,16 @@
   padding: .6em 2em;
   font-size: 1.2em !important;
   display: block;
+}
+
+.activist-candidate__card-label{
+  margin: .5em
+}
+
+.activist-candidate__card-label:first-child {
+  margin-left: 0;
+}
+
+.activist-candidate__card-label:last-child {
+  margin-right: 0;
 }

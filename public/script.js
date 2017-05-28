@@ -52,6 +52,8 @@ function listCandidates(candidates) {
   emailTemplate.style.display = 'inherit';
   console.log(candidates);
   candidates.forEach(candidate => {
+    const label = create('label', 'activist-candidat__card-label');
+    label.for = 'checkboxBox';
     const card = create('article', 'activist-candidate');
     const photo = create('img', 'activist-candidate__photo');
     photo.src = candidate.photo || './profile_blank.png'; //@TODO add photos to state;
@@ -103,7 +105,8 @@ function listCandidates(candidates) {
     card.appendChild(name);
     card.appendChild(party);
     card.appendChild(checkbox);
-    container.appendChild(card);
+    label.appendChild(card);
+    container.appendChild(label);
   });
   normaliseHeights(document.querySelectorAll('.activist-candidate'));
   // container.appendChild(table);
