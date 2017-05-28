@@ -191,7 +191,7 @@ function emailError(res) {
   container.innerHTML = '';
   emailTemplate.style.display = 'none';
 
-  if (res.error.findIndex(email => email.ErrorCode === 0) === -1) {
+  if (res.error && res.error.findIndex(email => email.ErrorCode === 0) === -1) {
     const errorHeader = create('h2');
     errorHeader.innerText = 'Error';
     const error = create('p');
@@ -220,14 +220,17 @@ function sendEmails(emailArr, from) {
       body: JSON.stringify({
         emails: [
           { email: 'finnhodgkin@gmail.com', name: 'Finn' },
-          { email: 'zoo', name: 'zooey' },
+          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
         ],
         fromEmail: from,
       }),
     })
       .then(res => res.json())
       .then(resolve)
-      .catch(reject);
+      .catch(res => {
+        console.log('happening');
+        return reject(res);
+      });
   });
 }
 
