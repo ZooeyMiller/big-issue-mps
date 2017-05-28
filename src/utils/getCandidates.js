@@ -64,6 +64,7 @@ const buildCandidates = objectArray => {
           party,
           name: candidate.name,
           email: candidate.email,
+          photo: candidate.thumbnail,
         };
       }
     })
