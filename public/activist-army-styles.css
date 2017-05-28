@@ -18,7 +18,7 @@
   margin: .5em;
   text-align: center;
   position: relative;
-  transform: translate(-6px, 6px);
+  transform: translate(6px, 6px);
   transition: all .3s ease-in-out;
   cursor: pointer;
 
@@ -32,9 +32,9 @@
 
 .activist-candidate--selected {
   transform: translate(0, 0);
-  -webkit-box-shadow: -.33em .33em 0px 0px rgba(184, 184, 184, 1);
-  -moz-box-shadow: -.33em .33em 0px 0px rgba(184, 184, 184, 1);
-  box-shadow: -.33em .33em 0px 0px rgba(184, 184, 184, 1);
+  -webkit-box-shadow: .33em .33em 0px 0px rgba(184, 184, 184, 1);
+  -moz-box-shadow: .33em .33em 0px 0px rgba(184, 184, 184, 1);
+  box-shadow: .33em .33em 0px 0px rgba(184, 184, 184, 1);
   background-color: rgb(240, 240, 240);
 }
 

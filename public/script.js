@@ -148,6 +148,9 @@ const makeForm = () => {
   const userAddition = create('textarea', 'activist--user-contribution');
   userAddition.placeholder = 'Anything you want to add?';
 
+  const instructions = create('p', 'activist-instructions');
+  instructions.innerText = 'Please select the candidates you want to email.';
+  document.querySelector('.post_content').insertBefore(instructions, container);
   container.appendChild(submit);
   container.appendChild(userAddition);
   submit.addEventListener('click', event => {
