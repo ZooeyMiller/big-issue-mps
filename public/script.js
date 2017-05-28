@@ -133,13 +133,16 @@ const makeForm = () => {
 
   form.addEventListener('submit', event => {
     event.preventDefault();
-    const emailArr = state.candidates.filter(c => c.checked).map(c => c.email);
+    const emailArr = state.candidates
+      .filter(candidate => candidate.checked)
+      .map(candidate => ({ email: candidate.email, name: candidate.name }));
     console.log(body.innerText);
     sendEmails(
       emailArr,
-      state.userInfo.email,
-      subject.value,
-      body.value,
+      {
+        email: state.userInfo.email,
+        name: state.userInfo.name,
+      },
       console.log
     );
   });
@@ -148,15 +151,16 @@ const makeForm = () => {
 };
 
 //@TODO use cbs instead of Promise
-function sendEmails(emailArr, from, subject, body, cb) {
+function sendEmails(emailArr, from, cb) {
   console.log(emailArr);
   fetch('/api', {
     method: 'POST',
     body: JSON.stringify({
-      emails: ['finnhodgkin@gmail.com', 'zooeyxmiller@gmail.com'],
+      emails: [
+        { email: 'finnhodgkin@gmail.com', name: 'Finn' },
+        { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
+      ],
       fromEmail: from,
-      subject: subject,
-      body: body,
     }),
   })
     .then(res => res.json())
