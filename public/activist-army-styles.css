@@ -123,8 +123,10 @@
 
 
 .activist--user-contribution {
-    width: 80%;
-    height: 6em;
+
+  width: 100%;
+  height: 6em;
+  padding: 1em;
 }
 
 #activist-loading {
