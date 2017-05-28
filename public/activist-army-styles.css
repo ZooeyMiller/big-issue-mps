@@ -1,0 +1,10 @@
+.activist-email-template {
+  background-color: #ebebeb;
+  padding: 1.5em;
+  display: none;
+}
+
+#activist-name {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}

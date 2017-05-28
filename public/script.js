@@ -51,6 +51,9 @@ function listCandidates(candidates) {
   var tbody = create('tbody');
   table.appendChild(tbody);
 
+  const emailTemplate = document.getElementById('email-template');
+  emailTemplate.style.display = 'inherit';
+
   candidates.forEach(function(candidate) {
     var candidateRow = create('tr', 'activist-tr');
 
@@ -115,23 +118,12 @@ function listCandidates(candidates) {
 
 //@TODO add labels to inputs
 const makeForm = () => {
-  const form = create('form', 'activist-form');
-  const subject = create('input', 'activist-input');
-  subject.type = 'text';
-  subject.value = `${state.userInfo.name}: subject line`;
-  const body = create('textarea', 'activist-text-area');
-  body.rows = '4';
-  body.cols = '4';
-  body.innerText = 'i care about things\n\nreally really things';
   const submit = create('button', 'button');
   submit.innerText = 'Send emails';
-  submit.type = 'submit';
 
-  form.appendChild(subject);
-  form.appendChild(body);
-  form.appendChild(submit);
+  container.appendChild(submit);
 
-  form.addEventListener('submit', event => {
+  submit.addEventListener('click', event => {
     event.preventDefault();
     const emailArr = state.candidates
       .filter(candidate => candidate.checked)
