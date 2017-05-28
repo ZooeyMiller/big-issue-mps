@@ -214,7 +214,6 @@ function emailError(res) {
   }
 }
 
-
 function sendEmails(emailArr, from, userInput) {
   return new Promise((reject, resolve) => {
     fetch('/api', {
