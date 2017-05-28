@@ -18,6 +18,7 @@ userDataForm.addEventListener('submit', function(event) {
   event.preventDefault();
   state.userInfo.name = event.target[0].value;
   state.userInfo.email = event.target[1].value;
+  state.userInfo.postcode = event.target[2].value;
   showLoader();
   fetch('/api?postcode=' + event.target[2].value)
     .then(function(res) {
@@ -57,6 +58,12 @@ function showError(error) {
 function listCandidates(candidates) {
   hideLoader();
   emailTemplate.style.display = 'inherit';
+  var senderName = create('p');
+  senderName.innerText = state.userInfo.name;
+  var senderPostcode = create('p');
+  senderPostcode.innerText = state.userInfo.postcode;
+  emailTemplate.appendChild(senderName);
+  emailTemplate.appendChild(senderPostcode);
   console.log(candidates);
   candidates.forEach(function(candidate) {
     var label = create('label', 'activist-candidate__card-label');
@@ -158,6 +165,9 @@ var makeForm = function makeForm() {
   var userAddition = create('textarea', 'activist--user-contribution');
   userAddition.placeholder = 'Anything you want to add?';
 
+  var instructions = create('h3', 'activist-instructions');
+  instructions.innerText = 'Please select the candidates you want to email.';
+  document.querySelector('.post_content').insertBefore(instructions, container);
   container.appendChild(submit);
   container.appendChild(userAddition);
   submit.addEventListener('click', function(event) {
@@ -177,6 +187,9 @@ var makeForm = function makeForm() {
           return { email: candidate.email, name: candidate.name };
         });
 
+      container.innerHTML = '';
+      document.getElementById('activist-army-start').scrollIntoView();
+      emailTemplate.style.display = 'none';
       showLoader('Sending emails...');
       sendEmails(
         emailArr,
@@ -242,10 +255,7 @@ function sendEmails(emailArr, from, userInput) {
     fetch('/api', {
       method: 'POST',
       body: JSON.stringify({
-        emails: [
-          { email: 'finnhodgkin@gmail.com', name: 'Finn' },
-          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
-        ],
+        emails: emailArr,
         fromEmail: from,
         userInput: userInput,
       }),
