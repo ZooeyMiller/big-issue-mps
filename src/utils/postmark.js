@@ -22,10 +22,13 @@ const mailOut = (to, from) => {
     }));
     console.log(emails);
 
-    client.sendEmailBatch(emails, err => {
-      if (err) reject(err);
-
-      resolve('Emails successfully sent');
+    client.sendEmailBatch(emails, (err, res) => {
+      if (err) return reject(err);
+      console.log('res is ---', res);
+      if (res.findIndex(sent => sent.ErrorCode) !== -1) {
+        return reject({ error: res });
+      }
+      return resolve({ success: 'Emails successfully sent' });
     });
   });
 };

@@ -137,33 +137,32 @@ const makeForm = () => {
       .filter(candidate => candidate.checked)
       .map(candidate => ({ email: candidate.email, name: candidate.name }));
     console.log(body.innerText);
-    sendEmails(
-      emailArr,
-      {
-        email: state.userInfo.email,
-        name: state.userInfo.name,
-      },
-      console.log
-    );
+    sendEmails(emailArr, {
+      email: state.userInfo.email,
+      name: state.userInfo.name,
+    })
+      .then(res => console.log('then', res))
+      .catch(err => console.log('catch', err));
   });
 
   container.appendChild(form);
 };
 
-//@TODO use cbs instead of Promise
-function sendEmails(emailArr, from, cb) {
+function sendEmails(emailArr, from) {
   console.log(emailArr);
-  fetch('/api', {
-    method: 'POST',
-    body: JSON.stringify({
-      emails: [
-        { email: 'finnhodgkin@gmail.com', name: 'Finn' },
-        { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
-      ],
-      fromEmail: from,
-    }),
-  })
-    .then(res => res.json())
-    .then(res => cb(null, res))
-    .catch(err => cb(err));
+  return new Promise((reject, resolve) => {
+    fetch('/api', {
+      method: 'POST',
+      body: JSON.stringify({
+        emails: [
+          { email: 'notanemial', name: 'Finn' },
+          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
+        ],
+        fromEmail: from,
+      }),
+    })
+      .then(res => res.json())
+      .then(resolve)
+      .catch(reject);
+  });
 }
