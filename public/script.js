@@ -52,7 +52,7 @@ function listCandidates(candidates) {
   emailTemplate.style.display = 'inherit';
   console.log(candidates);
   candidates.forEach(candidate => {
-    const label = create('label', 'activist-candidat__card-label');
+    const label = create('label', 'activist-candidate__card-label');
     label.for = 'checkboxBox';
     const card = create('article', 'activist-candidate');
     const photo = create('img', 'activist-candidate__photo');
@@ -66,36 +66,12 @@ function listCandidates(candidates) {
     if (candidate.email) {
       checkbox = create('label', 'activist-candidate__label');
       checkboxBox = create('input', 'activist-candidate__checkbox');
-
       checkbox.innerText = 'Send email: ';
       checkboxBox.type = 'checkbox';
       card.className += ' activist-candidate--selected';
       checkboxBox.checked = true;
       checkboxBox.value = candidate.email;
-      checkboxBox.addEventListener('change', function(event) {
-        const index = state.candidates.findIndex(
-          candidate => candidate.email === event.target.value
-        );
-        if (event.target.checked) {
-          card.classList.add('activist-candidate--selected');
-        } else {
-          card.classList.remove('activist-candidate--selected');
-        }
-        setState({
-          candidates: state.candidates.map((c, i) => {
-            if (i === index) {
-              return {
-                name: c.name,
-                email: c.email,
-                party: c.part,
-                photo: c.photo,
-                checked: event.target.checked,
-              };
-            }
-            return c;
-          }),
-        });
-      });
+      checkboxBox.addEventListener('change', checkboxHandler);
       checkbox.appendChild(checkboxBox);
     } else {
       checkbox = create('p', 'activist-candidate__no-email');
@@ -124,26 +100,64 @@ function listCandidates(candidates) {
   };
 }
 
-//@TODO add labels to inputs
+function checkboxHandler(event) {
+  const index = state.candidates.findIndex(
+    candidate => candidate.email === event.target.value
+  );
+  const card = event.target.parentElement.parentElement;
+  if (event.target.checked) {
+    card.classList.add('activist-candidate--selected');
+  } else {
+    card.classList.remove('activist-candidate--selected');
+  }
+  setState({
+    candidates: state.candidates.map((c, i) => {
+      if (i === index) {
+        return {
+          name: c.name,
+          email: c.email,
+          party: c.party,
+          photo: c.photo,
+          checked: event.target.checked,
+        };
+      }
+      return c;
+    }),
+  });
+  if (state.candidates.every(candidate => !candidate.checked)) {
+    document
+      .getElementById('activist-send')
+      .classList.add('activist-send--disabled');
+  } else {
+    document
+      .getElementById('activist-send')
+      .classList.remove('activist-send--disabled');
+  }
+}
+
 const makeForm = () => {
   const submit = create('button', 'button');
   submit.innerText = 'Send emails';
   submit.id = 'activist-send';
+  if (state.candidates.every(candidate => !candidate.checked)) {
+    submit.classList.add('activist-send--disabled');
+  }
 
   container.appendChild(submit);
 
   submit.addEventListener('click', event => {
     event.preventDefault();
-    const emailArr = state.candidates
-      .filter(candidate => candidate.checked)
-      .map(candidate => ({ email: candidate.email, name: candidate.name }));
-    console.log(body.innerText);
-    sendEmails(emailArr, {
-      email: state.userInfo.email,
-      name: state.userInfo.name,
-    })
-      .then(res => console.log('then', res))
-      .catch(err => console.log('catch', err));
+    if (state.candidates.some(candidate => candidate.checked)) {
+      const emailArr = state.candidates
+        .filter(candidate => candidate.checked)
+        .map(candidate => ({ email: candidate.email, name: candidate.name }));
+      sendEmails(emailArr, {
+        email: state.userInfo.email,
+        name: state.userInfo.name,
+      })
+        .then(res => console.log('then', res))
+        .catch(err => console.log('catch', err));
+    }
   });
 };
 

@@ -20,6 +20,7 @@
   position: relative;
   transform: translate(-6px, 6px);
       transition: all .3s ease-in-out;
+      cursor: pointer;
 
 }
 
@@ -106,4 +107,10 @@
 
 .activist-candidate__card-label:last-child {
   margin-right: 0;
+}
+
+.activist-send--disabled {
+  background-color: grey !important;
+  color: lightgrey !important;
+  cursor: default !important;
 }
