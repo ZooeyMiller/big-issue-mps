@@ -16,6 +16,7 @@ userDataForm.addEventListener('submit', function(event) {
   event.preventDefault();
   state.userInfo.name = event.target[0].value;
   state.userInfo.email = event.target[1].value;
+  showLoader();
   fetch('/api?postcode=' + event.target[2].value)
     .then(function(res) {
       if (res.status !== 200) {
@@ -24,10 +25,16 @@ userDataForm.addEventListener('submit', function(event) {
       }
       return res.json();
     })
-    .then(listCandidates)
+    .then(res => {
+      hideLoader();
+      return listCandidates(res);
+    })
     .then(setState)
     .then(makeForm)
-    .catch(showError);
+    .catch(res => {
+      hideLoader();
+      showError(res);
+    });
   userDataForm.style.display = 'none';
   //@TODO add spinner
 });
@@ -46,7 +53,7 @@ function showError(error) {
 }
 
 function listCandidates(candidates) {
-  //@TODO HIDE SPINNER
+  hideLoader();
   emailTemplate.style.display = 'inherit';
   console.log(candidates);
   candidates.forEach(candidate => {
@@ -151,6 +158,8 @@ const makeForm = () => {
       const emailArr = state.candidates
         .filter(candidate => candidate.checked)
         .map(candidate => ({ email: candidate.email, name: candidate.name }));
+
+      showLoader('Sending emails...');
       sendEmails(
         emailArr,
         {
@@ -205,13 +214,14 @@ function emailError(res) {
   }
 }
 
+
 function sendEmails(emailArr, from, userInput) {
   return new Promise((reject, resolve) => {
     fetch('/api', {
       method: 'POST',
       body: JSON.stringify({
         emails: [
-          { email: 'finnhod', name: 'Finn' },
+          { email: 'finnhodgkin@gmail.com', name: 'Finn' },
           { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
         ],
         fromEmail: from,
@@ -220,8 +230,25 @@ function sendEmails(emailArr, from, userInput) {
     })
       .then(res => res.json())
       .then(resolve)
-      .catch(reject);
+      .catch(res => {
+        console.log('happening');
+        return reject(res);
+      });
   });
+}
+
+function showLoader(text) {
+  const loaderWrap = document.getElementById('activist-loading-container');
+  loaderWrap.classList.add('activist-loading-container--show');
+  if (text) {
+    loaderWrap.querySelector('#activist-loading').innerText = text;
+  }
+}
+
+function hideLoader() {
+  const loaderWrap = document
+    .getElementById('activist-loading-container')
+    .classList.remove('activist-loading-container--show');
 }
 
 const normaliseHeights = nodeList => {
