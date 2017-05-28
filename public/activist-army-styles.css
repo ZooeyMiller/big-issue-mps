@@ -14,13 +14,23 @@
   border-radius: .3em;
   vertical-align: top;
   padding: 1em;
-  background-color: rgb(240, 240, 240);
+  background-color: #ffd2d2;
   margin: .5em;
   text-align: center;
-  -webkit-box-shadow: -.33em .33em 0px 0px rgba(184,184,184,1);
--moz-box-shadow: -.33em .33em 0px 0px rgba(184,184,184,1);
-box-shadow: -.33em .33em 0px 0px rgba(184,184,184,1);
-position: relative;
+  position: relative;
+  transform: translate(-6px, 6px);
+
+}
+
+.activist-candidate--selected {
+  transform: translate(0, 0);
+  -webkit-box-shadow: -.33em .33em 0px 0px rgba(184, 184, 184, 1);
+  -moz-box-shadow: -.33em .33em 0px 0px rgba(184, 184, 184, 1);
+  box-shadow: -.33em .33em 0px 0px rgba(184, 184, 184, 1);
+  background-color: rgb(240, 240, 240);
+}
+
+.activist-candidate--unselected {
 }
 
 
@@ -47,35 +57,33 @@ position: relative;
 }
 
 .activist-candidate__party {
-
-      font-size: .9em !important;
-      font-weight: normal !important;
-      line-height: 1em !important;
-      margin-bottom: 0.9em !important;
+  font-size: .9em !important;
+  font-weight: normal !important;
+  line-height: 1em !important;
+  margin-bottom: 0.9em !important;
 }
 
 .activist-candidate__label {
   bottom: .5em;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
 }
 
 .activist-candidate__no-email {
   bottom: .5em;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 auto !important;
-    padding: 0;
-
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto !important;
+  padding: 0;
 }
 
 .activist-label {
   display: none;
   font-size: 0;
-  color: rgba(0,0,0,0);
+  color: rgba(0, 0, 0, 0);
 }
 
 .activist-input {

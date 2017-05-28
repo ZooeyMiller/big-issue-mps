@@ -64,14 +64,21 @@ function listCandidates(candidates) {
     if (candidate.email) {
       checkbox = create('label', 'activist-candidate__label');
       checkboxBox = create('input', 'activist-candidate__checkbox');
+
       checkbox.innerText = 'Send email: ';
       checkboxBox.type = 'checkbox';
+      card.className += ' activist-candidate--selected';
       checkboxBox.checked = true;
       checkboxBox.value = candidate.email;
       checkboxBox.addEventListener('change', function(event) {
         const index = state.candidates.findIndex(
           candidate => candidate.email === event.target.value
         );
+        if (event.target.checked) {
+          card.classList.add('activist-candidate--selected');
+        } else {
+          card.classList.remove('activist-candidate--selected');
+        }
         setState({
           candidates: state.candidates.map((c, i) => {
             if (i === index) {
