@@ -17,11 +17,18 @@ userDataForm.addEventListener('submit', function(event) {
   state.userInfo.email = event.target[1].value;
   fetch('/api?postcode=' + event.target[2].value)
     .then(function(res) {
+      console.log(res);
+      //in here we find what status code is
+      if (res.status !== 200) {
+        throw new Error('Invalid postcode');
+        return;
+      }
       return res.json();
     })
     .then(listCandidates)
     .then(setState)
-    .then(makeForm);
+    .then(makeForm)
+    .catch(showError);
   userDataForm.style.display = 'none';
   //@TODO add spinner
 });
@@ -30,6 +37,13 @@ function create(tag, htmlClass) {
   var element = document.createElement(tag);
   element.className = htmlClass;
   return element;
+}
+
+function showError(error) {
+  const err = create('p', 'activist-error');
+  err.innerText = error.message;
+  userDataForm.style.display = 'initial';
+  container.appendChild(err);
 }
 
 function listCandidates(candidates) {
