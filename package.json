@@ -16,7 +16,7 @@
   "license": "ISC",
   "engines": {
     "node": "6.9.5"
-  }
+  },
   "bugs": {
     "url": "https://github.com/ZooeyMiller/big-issue-candidate-email/issues"
   },
