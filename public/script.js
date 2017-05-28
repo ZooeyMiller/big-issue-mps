@@ -90,7 +90,7 @@ function listCandidates(candidates) {
       checkbox.appendChild(checkboxBox);
     } else {
       checkbox = create('p', 'activist-candidate__no-email');
-      checkbox.innerText = 'No email on record';
+      checkbox.innerText = 'No email';
     }
     card.appendChild(photo);
     card.appendChild(name);
@@ -118,6 +118,7 @@ function listCandidates(candidates) {
 const makeForm = () => {
   const submit = create('button', 'button');
   submit.innerText = 'Send emails';
+  submit.id = 'activist-send';
 
   container.appendChild(submit);
 

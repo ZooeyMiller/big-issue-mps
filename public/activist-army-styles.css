@@ -4,11 +4,6 @@
   display: none;
 }
 
-#activist-name {
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
 #activist-army-container {
   text-align: center;
 }
@@ -55,7 +50,7 @@ position: relative;
 
       font-size: .9em !important;
       font-weight: normal !important;
-      line-height: .9em !important;
+      line-height: 1em !important;
       margin-bottom: 0.9em !important;
 }
 
@@ -67,4 +62,34 @@ position: relative;
     margin: 0 auto;
 }
 
-.activist-candidate__no-email {}
+.activist-candidate__no-email {
+  bottom: .5em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto !important;
+    padding: 0;
+
+}
+
+.activist-label {
+  display: none;
+  font-size: 0;
+  color: rgba(0,0,0,0);
+}
+
+.activist-input {
+  margin: .5em auto .5em auto;
+  padding: .3em;
+  width: 20em;
+  display: block;
+  font-size: 1em;
+  color: black;
+}
+
+#activist-send {
+  margin: 1em auto;
+  padding: .6em 2em;
+  font-size: 1.2em !important;
+  display: block;
+}
