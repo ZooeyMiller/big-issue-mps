@@ -55,7 +55,7 @@ function listCandidates(candidates) {
     const card = create('article', 'activist-candidate');
     card.style.backgroundColor = 'red';
     const photo = create('img', 'activist-candidate__photo');
-    photo.src = candidate.photo; //@TODO add photos to state;
+    photo.src = candidate.photo || './profile_blank.png'; //@TODO add photos to state;
     photo.alt = `picture of ${candidate.name}`;
     const name = create('h2', 'activist-candidate__name');
     name.innerText = candidate.name;
@@ -78,6 +78,7 @@ function listCandidates(candidates) {
                 name: c.name,
                 email: c.email,
                 party: c.part,
+                photo: c.photo,
                 checked: event.target.checked,
               };
             }
@@ -97,12 +98,14 @@ function listCandidates(candidates) {
   });
 
   // container.appendChild(table);
+  console.log('CHECK HERE', candidates);
   return {
     candidates: candidates.map(function(c) {
       return {
         name: c.name,
         party: c.party,
         email: c.email,
+        photo: c.photo,
         checked: c.email ? true : false,
       };
     }),
