@@ -1,6 +1,8 @@
+'use strict';
+
 var container = document.getElementById('activist-army-container');
 var userDataForm = document.getElementById('activist-user-info');
-const emailTemplate = document.getElementById('email-template');
+var emailTemplate = document.getElementById('email-template');
 var state = {
   userInfo: {},
   candidates: [],
@@ -25,13 +27,13 @@ userDataForm.addEventListener('submit', function(event) {
       }
       return res.json();
     })
-    .then(res => {
+    .then(function(res) {
       hideLoader();
       return listCandidates(res);
     })
     .then(setState)
     .then(makeForm)
-    .catch(res => {
+    .catch(function(res) {
       hideLoader();
       showError(res);
     });
@@ -46,7 +48,7 @@ function create(tag, htmlClass) {
 }
 
 function showError(error) {
-  const err = create('p', 'activist-error');
+  var err = create('p', 'activist-error');
   err.innerText = error.message;
   userDataForm.style.display = 'initial';
   container.appendChild(err);
@@ -56,21 +58,21 @@ function listCandidates(candidates) {
   hideLoader();
   emailTemplate.style.display = 'inherit';
   console.log(candidates);
-  candidates.forEach(candidate => {
-    const label = create('label', 'activist-candidate__card-label');
+  candidates.forEach(function(candidate) {
+    var label = create('label', 'activist-candidate__card-label');
     label.for = 'checkboxBox';
-    const card = create('article', 'activist-candidate');
-    const photo = create('img', 'activist-candidate__photo');
+    var card = create('article', 'activist-candidate');
+    var photo = create('img', 'activist-candidate__photo');
     photo.src = candidate.photo || './profile_blank.png'; //@TODO add photos to state;
-    photo.alt = `picture of ${candidate.name}`;
-    const name = create('h2', 'activist-candidate__name');
+    photo.alt = 'picture of ' + candidate.name;
+    var name = create('h2', 'activist-candidate__name');
     name.innerText = candidate.name;
-    const party = create('h3', 'activist-candidate__party');
+    var party = create('h3', 'activist-candidate__party');
     party.innerText = candidate.party;
-    let checkbox;
+    var checkbox = void 0;
     if (candidate.email) {
-      checkbox = create('label', 'activist-candidate__label');
-      checkboxBox = create('input', 'activist-candidate__checkbox');
+      var checkbox = create('label', 'activist-candidate__label');
+      var checkboxBox = create('input', 'activist-candidate__checkbox');
       checkbox.innerText = 'Send email: ';
       checkboxBox.type = 'checkbox';
       card.className += ' activist-candidate--selected';
@@ -104,17 +106,17 @@ function listCandidates(candidates) {
 }
 
 function checkboxHandler(event) {
-  const index = state.candidates.findIndex(
-    candidate => candidate.email === event.target.value
-  );
-  const card = event.target.parentElement.parentElement;
+  var index = state.candidates.findIndex(function(candidate) {
+    return candidate.email === event.target.value;
+  });
+  var card = event.target.parentElement.parentElement;
   if (event.target.checked) {
     card.classList.add('activist-candidate--selected');
   } else {
     card.classList.remove('activist-candidate--selected');
   }
   setState({
-    candidates: state.candidates.map((c, i) => {
+    candidates: state.candidates.map(function(c, i) {
       if (i === index) {
         return {
           name: c.name,
@@ -127,7 +129,11 @@ function checkboxHandler(event) {
       return c;
     }),
   });
-  if (state.candidates.every(candidate => !candidate.checked)) {
+  if (
+    state.candidates.every(function(candidate) {
+      return !candidate.checked;
+    })
+  ) {
     document
       .getElementById('activist-send')
       .classList.add('activist-send--disabled');
@@ -138,26 +144,38 @@ function checkboxHandler(event) {
   }
 }
 
-const makeForm = () => {
-  const submit = create('button', 'button');
+var makeForm = function makeForm() {
+  var submit = create('button', 'button');
   submit.innerText = 'Send emails';
   submit.id = 'activist-send';
-  if (state.candidates.every(candidate => !candidate.checked)) {
+  if (
+    state.candidates.every(function(candidate) {
+      return !candidate.checked;
+    })
+  ) {
     submit.classList.add('activist-send--disabled');
   }
-  const userAddition = create('textarea', 'activist--user-contribution');
+  var userAddition = create('textarea', 'activist--user-contribution');
   userAddition.placeholder = 'Anything you want to add?';
 
   container.appendChild(submit);
   container.appendChild(userAddition);
-  submit.addEventListener('click', event => {
+  submit.addEventListener('click', function(event) {
     event.preventDefault();
 
-    if (state.candidates.some(candidate => candidate.checked)) {
+    if (
+      state.candidates.some(function(candidate) {
+        return candidate.checked;
+      })
+    ) {
       // console.log(userAddition.value);
-      const emailArr = state.candidates
-        .filter(candidate => candidate.checked)
-        .map(candidate => ({ email: candidate.email, name: candidate.name }));
+      var emailArr = state.candidates
+        .filter(function(candidate) {
+          return candidate.checked;
+        })
+        .map(function(candidate) {
+          return { email: candidate.email, name: candidate.name };
+        });
 
       showLoader('Sending emails...');
       sendEmails(
@@ -179,8 +197,8 @@ function emailSent() {
   container.innerHTML = '';
   emailTemplate.style.display = 'none';
 
-  const thanks = create('h2');
-  const subThanks = create('h3');
+  var thanks = create('h2');
+  var subThanks = create('h3');
   thanks.innerText = 'Emails successfully sent';
   subThanks.innerText = 'Thanks for supporting The Big Issue!';
   thanks.appendChild(subThanks);
@@ -193,17 +211,22 @@ function emailError(res) {
   emailTemplate.style.display = 'none';
   console.log(res);
 
-  if (res.error && res.error.findIndex(email => email.ErrorCode === 0) === -1) {
-    const errorHeader = create('h2');
+  if (
+    res.error &&
+    res.error.findIndex(function(email) {
+      return email.ErrorCode === 0;
+    }) === -1
+  ) {
+    var errorHeader = create('h2');
     errorHeader.innerText = 'Error';
-    const error = create('p');
+    var error = create('p');
     error.id = 'activist-email-error';
     error.innerText = 'The email delivery failed. ';
-    const errorLink = create('a');
+    var errorLink = create('a');
     errorLink.href = '#';
     errorLink.innerText = 'Click here to try again.';
     error.appendChild(errorLink);
-    errorLink.addEventListener('click', e => {
+    errorLink.addEventListener('click', function(e) {
       e.preventDefault();
       window.location.reload();
     });
@@ -215,7 +238,7 @@ function emailError(res) {
 }
 
 function sendEmails(emailArr, from, userInput) {
-  return new Promise((reject, resolve) => {
+  return new Promise(function(reject, resolve) {
     fetch('/api', {
       method: 'POST',
       body: JSON.stringify({
@@ -224,15 +247,15 @@ function sendEmails(emailArr, from, userInput) {
           { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
         ],
         fromEmail: from,
-        userInput,
+        userInput: userInput,
       }),
     })
-      .then(res => {
+      .then(function(res) {
         hideLoader();
         return res.json();
       })
       .then(resolve)
-      .catch(res => {
+      .catch(function(res) {
         hideLoader();
         console.log('happening');
         return reject(res);
@@ -241,7 +264,7 @@ function sendEmails(emailArr, from, userInput) {
 }
 
 function showLoader(text) {
-  const loaderWrap = document.getElementById('activist-loading-container');
+  var loaderWrap = document.getElementById('activist-loading-container');
   loaderWrap.classList.add('activist-loading-container--show');
   if (text) {
     loaderWrap.querySelector('#activist-loading').innerText = text;
@@ -249,15 +272,19 @@ function showLoader(text) {
 }
 
 function hideLoader() {
-  const loaderWrap = document
+  var loaderWrap = document
     .getElementById('activist-loading-container')
     .classList.remove('activist-loading-container--show');
 }
 
-const normaliseHeights = nodeList => {
-  const tallest = Math.max.apply(
+var normaliseHeights = function normaliseHeights(nodeList) {
+  var tallest = Math.max.apply(
     null,
-    Array.from(nodeList).map(e => e.clientHeight)
+    Array.from(nodeList).map(function(e) {
+      return e.clientHeight;
+    })
   );
-  nodeList.forEach(card => (card.style.height = `${tallest + 18}px`));
+  nodeList.forEach(function(card) {
+    return (card.style.height = tallest + 18 + 'px');
+  });
 };
