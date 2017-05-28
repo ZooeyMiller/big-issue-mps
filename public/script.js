@@ -147,33 +147,36 @@ const makeForm = () => {
 
   form.addEventListener('submit', event => {
     event.preventDefault();
-    const emailArr = state.candidates.filter(c => c.checked).map(c => c.email);
+    const emailArr = state.candidates
+      .filter(candidate => candidate.checked)
+      .map(candidate => ({ email: candidate.email, name: candidate.name }));
     console.log(body.innerText);
-    sendEmails(
-      emailArr,
-      state.userInfo.email,
-      subject.value,
-      body.value,
-      console.log
-    );
+    sendEmails(emailArr, {
+      email: state.userInfo.email,
+      name: state.userInfo.name,
+    })
+      .then(res => console.log('then', res))
+      .catch(err => console.log('catch', err));
   });
 
   container.appendChild(form);
 };
 
-//@TODO use cbs instead of Promise
-function sendEmails(emailArr, from, subject, body, cb) {
+function sendEmails(emailArr, from) {
   console.log(emailArr);
-  fetch('/api', {
-    method: 'POST',
-    body: JSON.stringify({
-      emails: ['finnhodgkin@gmail.com', 'zooeyxmiller@gmail.com'],
-      fromEmail: from,
-      subject: subject,
-      body: body,
-    }),
-  })
-    .then(res => res.json())
-    .then(res => cb(null, res))
-    .catch(err => cb(err));
+  return new Promise((reject, resolve) => {
+    fetch('/api', {
+      method: 'POST',
+      body: JSON.stringify({
+        emails: [
+          { email: 'notanemial', name: 'Finn' },
+          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
+        ],
+        fromEmail: from,
+      }),
+    })
+      .then(res => res.json())
+      .then(resolve)
+      .catch(reject);
+  });
 }
