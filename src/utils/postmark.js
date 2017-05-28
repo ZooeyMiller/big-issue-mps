@@ -5,19 +5,20 @@ const client = new postmark.Client(process.env.POSTMARK_API);
 
 /**
  * Send emails to an array of email addresses
- * @param  {Array} to      Array of string emails
- * @param  {String} from    User's email address
- * @param  {String} subject Subject line
- * @param  {String} body    Body TextBody
+ * @param  {Array} to     Array of objects containing names and emails of each recipient (keys name and email)
+ * @param  {Object} from  User name and email address (keys name and email)
  */
-const mailOut = (to, from, subject, body) => {
+const mailOut = (to, from) => {
   return new Promise((resolve, reject) => {
     const emails = to.map(address => ({
       From: 'activist@activistarmy.co.uk',
-      To: address,
-      ReplyTo: from,
-      Subject: subject,
-      TextBody: body,
+      To: address.email,
+      ReplyTo: from.email,
+      TemplateId: 1962301,
+      TemplateModel: {
+        candidatename: address.name,
+        sendername: from.name,
+      },
     }));
     console.log(emails);
 
