@@ -8,3 +8,63 @@
   padding-bottom: 0;
   margin-bottom: 0;
 }
+
+#activist-army-container {
+  text-align: center;
+}
+
+.activist-candidate {
+  display: inline-block;
+  width: 9em;
+  border-radius: .3em;
+  vertical-align: top;
+  padding: 1em;
+  background-color: rgb(240, 240, 240);
+  margin: .5em;
+  text-align: center;
+  -webkit-box-shadow: -.33em .33em 0px 0px rgba(184,184,184,1);
+-moz-box-shadow: -.33em .33em 0px 0px rgba(184,184,184,1);
+box-shadow: -.33em .33em 0px 0px rgba(184,184,184,1);
+position: relative;
+}
+
+
+.activist-candidate:first-child {
+  margin-left: 0;
+}
+
+.activist-candidate:last-child {
+  margin-right: 0;
+}
+
+.activist-candidate__photo {
+  width: 6.5em;
+  height: 6.5em;
+  border-radius: 50%;
+  margin: 0 auto;
+  display: block;
+}
+
+.activist-candidate__name {
+  font-size: 1em !important;
+  line-height: 1em !important;
+  margin: .9em 0 .9em 0 !important;
+}
+
+.activist-candidate__party {
+
+      font-size: .9em !important;
+      font-weight: normal !important;
+      line-height: .9em !important;
+      margin-bottom: 0.9em !important;
+}
+
+.activist-candidate__label {
+  bottom: .5em;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.activist-candidate__no-email {}
