@@ -48,76 +48,55 @@ function showError(error) {
 
 function listCandidates(candidates) {
   //@TODO HIDE SPINNER
-  var table = create('table', 'activist-table');
-  var thead = create('thead');
-  table.appendChild(thead);
-  var tr = create('tr', 'activist-tr');
-  thead.appendChild(tr);
-  var thEmail = create('th', 'activist-th');
-  thEmail.innerText = 'Email';
-  var thCandidate = create('th', 'activist-th');
-  thCandidate.innerText = 'Candidate';
-  var thParty = create('th', 'activist-th');
-  thParty.innerText = 'Party';
-  tr.appendChild(thEmail);
-  tr.appendChild(thCandidate);
-  tr.appendChild(thParty);
-  var tbody = create('tbody');
-  table.appendChild(tbody);
-
   const emailTemplate = document.getElementById('email-template');
   emailTemplate.style.display = 'inherit';
-
-  candidates.forEach(function(candidate) {
-    var candidateRow = create('tr', 'activist-tr');
-
-    var emailBox = create('input');
-    emailBox.type = 'checkbox';
-    emailBox.checked = true;
-    emailBox.value = candidate.email;
-    emailBox.addEventListener('change', function(event) {
-      const index = state.candidates.findIndex(
-        candidate => candidate.email === emailBox.value
-      );
-      setState({
-        candidates: state.candidates.map((c, i) => {
-          if (i === index) {
-            return {
-              name: c.name,
-              email: c.email,
-              party: c.part,
-              checked: event.target.checked,
-            };
-          }
-          return c;
-        }),
+  console.log(candidates);
+  candidates.forEach(candidate => {
+    const card = create('article', 'activist-candidate');
+    card.style.backgroundColor = 'red';
+    const photo = create('img', 'activist-candidate__photo');
+    photo.src = candidate.photo; //@TODO add photos to state;
+    photo.alt = `picture of ${candidate.name}`;
+    const name = create('h2', 'activist-candidate__name');
+    name.innerText = candidate.name;
+    const party = create('h3', 'activist-candidate__party');
+    party.innerText = candidate.party;
+    let checkbox;
+    if (candidate.email) {
+      checkbox = create('input', 'activist-candidate__checkbox');
+      checkbox.type = 'checkbox';
+      checkbox.checked = true;
+      checkbox.value = candidate.email;
+      checkbox.addEventListener('change', function(event) {
+        const index = state.candidates.findIndex(
+          candidate => candidate.email === event.target.value
+        );
+        setState({
+          candidates: state.candidates.map((c, i) => {
+            if (i === index) {
+              return {
+                name: c.name,
+                email: c.email,
+                party: c.part,
+                checked: event.target.checked,
+              };
+            }
+            return c;
+          }),
+        });
       });
-    });
-
-    var emailFail = create('span');
-    emailFail.innerText = 'No email on record.';
-
-    var candidateEmail = candidate.email ? emailBox : emailFail;
-
-    var candidateName = candidate.name;
-    var candidateParty = candidate.party;
-
-    var emailTd = create('td');
-    emailTd.appendChild(candidateEmail);
-
-    var candidateTd = create('td');
-    candidateTd.innerText = candidateName;
-
-    var partyTd = create('td');
-    partyTd.innerText = candidateParty;
-
-    candidateRow.appendChild(emailTd);
-    candidateRow.appendChild(candidateTd);
-    candidateRow.appendChild(partyTd);
-    tbody.appendChild(candidateRow);
+    } else {
+      checkbox = create('p', 'activist-candidate__no-email');
+      checkbox.innerText = 'No email on record';
+    }
+    card.appendChild(name);
+    card.appendChild(party);
+    card.appendChild(photo);
+    card.appendChild(checkbox);
+    container.appendChild(card);
   });
 
-  container.appendChild(table);
+  // container.appendChild(table);
   return {
     candidates: candidates.map(function(c) {
       return {
@@ -150,8 +129,6 @@ const makeForm = () => {
       .then(res => console.log('then', res))
       .catch(err => console.log('catch', err));
   });
-
-  container.appendChild(form);
 };
 
 function sendEmails(emailArr, from) {
