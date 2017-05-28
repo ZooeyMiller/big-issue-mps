@@ -48,54 +48,8 @@ function showError(error) {
 
 function listCandidates(candidates) {
   //@TODO HIDE SPINNER
-  // var table = create('table', 'activist-table');
-  // var thead = create('thead');
-  // table.appendChild(thead);
-  // var tr = create('tr', 'activist-tr');
-  // thead.appendChild(tr);
-  // var thEmail = create('th', 'activist-th');
-  // thEmail.innerText = 'Email';
-  // var thCandidate = create('th', 'activist-th');
-  // thCandidate.innerText = 'Candidate';
-  // var thParty = create('th', 'activist-th');
-  // thParty.innerText = 'Party';
-  // tr.appendChild(thEmail);
-  // tr.appendChild(thCandidate);
-  // tr.appendChild(thParty);
-  // var tbody = create('tbody');
-  // table.appendChild(tbody);
-
-  // candidates.forEach(function(candidate) {
-  //   var candidateRow = create('tr', 'activist-tr');
-  //
-  //   var emailBox = create('input');
-  //   emailBox.type = 'checkbox';
-  //   emailBox.checked = true;
-  //   emailBox.value = candidate.email;
-  //   });
-
-  // var emailFail = create('span');
-  // emailFail.innerText = 'No email on record.';
-  //
-  // var candidateEmail = candidate.email ? emailBox : emailFail;
-  //
-  // var candidateName = candidate.name;
-  // var candidateParty = candidate.party;
-  //
-  // var emailTd = create('td');
-  // emailTd.appendChild(candidateEmail);
-  //
-  // var candidateTd = create('td');
-  // candidateTd.innerText = candidateName;
-  //
-  // var partyTd = create('td');
-  // partyTd.innerText = candidateParty;
-  //
-  // candidateRow.appendChild(emailTd);
-  // candidateRow.appendChild(candidateTd);
-  // candidateRow.appendChild(partyTd);
-  // tbody.appendChild(candidateRow);
-  // });
+  const emailTemplate = document.getElementById('email-template');
+  emailTemplate.style.display = 'inherit';
   console.log(candidates);
   candidates.forEach(candidate => {
     const card = create('article', 'activist-candidate');
@@ -157,23 +111,12 @@ function listCandidates(candidates) {
 
 //@TODO add labels to inputs
 const makeForm = () => {
-  const form = create('form', 'activist-form');
-  const subject = create('input', 'activist-input');
-  subject.type = 'text';
-  subject.value = `${state.userInfo.name}: subject line`;
-  const body = create('textarea', 'activist-text-area');
-  body.rows = '4';
-  body.cols = '4';
-  body.innerText = 'i care about things\n\nreally really things';
   const submit = create('button', 'button');
   submit.innerText = 'Send emails';
-  submit.type = 'submit';
 
-  form.appendChild(subject);
-  form.appendChild(body);
-  form.appendChild(submit);
+  container.appendChild(submit);
 
-  form.addEventListener('submit', event => {
+  submit.addEventListener('click', event => {
     event.preventDefault();
     const emailArr = state.candidates
       .filter(candidate => candidate.checked)
@@ -186,8 +129,6 @@ const makeForm = () => {
       .then(res => console.log('then', res))
       .catch(err => console.log('catch', err));
   });
-
-  container.appendChild(form);
 };
 
 function sendEmails(emailArr, from) {
