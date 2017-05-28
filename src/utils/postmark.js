@@ -8,7 +8,7 @@ const client = new postmark.Client(process.env.POSTMARK_API);
  * @param  {Array} to     Array of objects containing names and emails of each recipient (keys name and email)
  * @param  {Object} from  User name and email address (keys name and email)
  */
-const mailOut = (to, from) => {
+const mailOut = (to, from, userInput) => {
   return new Promise((resolve, reject) => {
     const emails = to.map(address => ({
       From: 'activist@activistarmy.co.uk',
@@ -18,6 +18,7 @@ const mailOut = (to, from) => {
       TemplateModel: {
         candidatename: address.name,
         sendername: from.name,
+        usermessage: userInput,
       },
     }));
     console.log(emails);

@@ -19,9 +19,15 @@
   text-align: center;
   position: relative;
   transform: translate(-6px, 6px);
-      transition: all .3s ease-in-out;
-      cursor: pointer;
+  transition: all .3s ease-in-out;
+  cursor: pointer;
 
+}
+
+@media (max-width: 400px) {
+  .activist-candidate {
+    width: 8em;
+  }
 }
 
 .activist-candidate--selected {
@@ -113,6 +119,12 @@
   background-color: grey !important;
   color: lightgrey !important;
   cursor: default !important;
+}
+
+
+.activist--user-contribution {
+    width: 80%;
+    height: 6em;
 }
 
 #activist-loading {

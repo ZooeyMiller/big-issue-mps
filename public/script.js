@@ -145,30 +145,31 @@ const makeForm = () => {
   if (state.candidates.every(candidate => !candidate.checked)) {
     submit.classList.add('activist-send--disabled');
   }
+  const userAddition = create('textarea', 'activist--user-contribution');
+  userAddition.placeholder = 'Anything you want to add?';
 
   container.appendChild(submit);
-
+  container.appendChild(userAddition);
   submit.addEventListener('click', event => {
     event.preventDefault();
 
     if (state.candidates.some(candidate => candidate.checked)) {
+      // console.log(userAddition.value);
       const emailArr = state.candidates
         .filter(candidate => candidate.checked)
         .map(candidate => ({ email: candidate.email, name: candidate.name }));
-      showLoader('Sending emails...');
 
-      sendEmails(emailArr, {
-        email: state.userInfo.email,
-        name: state.userInfo.name,
-      })
-        .then(res => {
-          hideLoader();
-          emailSent();
-        })
-        .catch(res => {
-          hideLoader();
-          emailError(res);
-        });
+      showLoader('Sending emails...');
+      sendEmails(
+        emailArr,
+        {
+          email: state.userInfo.email,
+          name: state.userInfo.name,
+        },
+        userAddition.value
+      )
+        .then(emailSent)
+        .catch(emailError);
     }
   });
 };
@@ -190,6 +191,7 @@ function emailError(res) {
   document.getElementById('activist-army-start').scrollIntoView();
   container.innerHTML = '';
   emailTemplate.style.display = 'none';
+  console.log(res);
 
   if (res.error && res.error.findIndex(email => email.ErrorCode === 0) === -1) {
     const errorHeader = create('h2');
@@ -212,8 +214,8 @@ function emailError(res) {
   }
 }
 
-function sendEmails(emailArr, from) {
-  console.log(emailArr);
+
+function sendEmails(emailArr, from, userInput) {
   return new Promise((reject, resolve) => {
     fetch('/api', {
       method: 'POST',
@@ -223,6 +225,7 @@ function sendEmails(emailArr, from) {
           { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
         ],
         fromEmail: from,
+        userInput,
       }),
     })
       .then(res => res.json())

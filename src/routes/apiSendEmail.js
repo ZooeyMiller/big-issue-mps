@@ -4,8 +4,8 @@ module.exports = {
   method: 'POST',
   path: '/api',
   handler: (req, reply) => {
-    const { emails, fromEmail } = JSON.parse(req.payload);
-    postmark(emails, fromEmail)
+    const { emails, fromEmail, userInput } = JSON.parse(req.payload);
+    postmark(emails, fromEmail, userInput)
       .then(res => {
         reply({ res });
       })
