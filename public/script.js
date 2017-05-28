@@ -159,6 +159,9 @@ const makeForm = () => {
         .filter(candidate => candidate.checked)
         .map(candidate => ({ email: candidate.email, name: candidate.name }));
 
+      container.innerHTML = '';
+      document.getElementById('activist-army-start').scrollIntoView();
+      emailTemplate.style.display = 'none';
       showLoader('Sending emails...');
       sendEmails(
         emailArr,
