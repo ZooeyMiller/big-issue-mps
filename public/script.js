@@ -1,5 +1,6 @@
 var container = document.getElementById('activist-army-container');
 var userDataForm = document.getElementById('activist-user-info');
+const emailTemplate = document.getElementById('email-template');
 var state = {
   userInfo: {},
   candidates: [],
@@ -17,8 +18,6 @@ userDataForm.addEventListener('submit', function(event) {
   state.userInfo.email = event.target[1].value;
   fetch('/api?postcode=' + event.target[2].value)
     .then(function(res) {
-      console.log(res);
-      //in here we find what status code is
       if (res.status !== 200) {
         throw new Error('Invalid postcode');
         return;
@@ -48,7 +47,6 @@ function showError(error) {
 
 function listCandidates(candidates) {
   //@TODO HIDE SPINNER
-  const emailTemplate = document.getElementById('email-template');
   emailTemplate.style.display = 'inherit';
   console.log(candidates);
   candidates.forEach(candidate => {
@@ -106,8 +104,6 @@ function listCandidates(candidates) {
     container.appendChild(card);
   });
   normaliseHeights(document.querySelectorAll('.activist-candidate'));
-  // container.appendChild(table);
-  console.log('CHECK HERE', candidates);
   return {
     candidates: candidates.map(function(c) {
       return {
@@ -121,7 +117,6 @@ function listCandidates(candidates) {
   };
 }
 
-//@TODO add labels to inputs
 const makeForm = () => {
   const submit = create('button', 'button');
   submit.innerText = 'Send emails';
@@ -134,25 +129,62 @@ const makeForm = () => {
     const emailArr = state.candidates
       .filter(candidate => candidate.checked)
       .map(candidate => ({ email: candidate.email, name: candidate.name }));
-    console.log(body.innerText);
     sendEmails(emailArr, {
       email: state.userInfo.email,
       name: state.userInfo.name,
     })
-      .then(res => console.log('then', res))
-      .catch(err => console.log('catch', err));
+      .then(emailSent)
+      .catch(emailError);
   });
 };
 
+function emailSent() {
+  document.getElementById('activist-army-start').scrollIntoView();
+  container.innerHTML = '';
+  emailTemplate.style.display = 'none';
+
+  const thanks = create('h2');
+  const subThanks = create('h3');
+  thanks.innerText = 'Emails successfully sent';
+  subThanks.innerText = 'Thanks for supporting The Big Issue!';
+  thanks.appendChild(subThanks);
+  container.appendChild(thanks);
+}
+
+function emailError(res) {
+  document.getElementById('activist-army-start').scrollIntoView();
+  container.innerHTML = '';
+  emailTemplate.style.display = 'none';
+
+  if (res.error.findIndex(email => email.ErrorCode === 0) === -1) {
+    const errorHeader = create('h2');
+    errorHeader.innerText = 'Error';
+    const error = create('p');
+    error.id = 'activist-email-error';
+    error.innerText = 'The email delivery failed. ';
+    const errorLink = create('a');
+    errorLink.href = '#';
+    errorLink.innerText = 'Click here to try again.';
+    error.appendChild(errorLink);
+    errorLink.addEventListener('click', e => {
+      e.preventDefault();
+      window.location.reload();
+    });
+    container.appendChild(errorHeader);
+    container.appendChild(error);
+  } else {
+    emailSent();
+  }
+}
+
 function sendEmails(emailArr, from) {
-  console.log(emailArr);
   return new Promise((reject, resolve) => {
     fetch('/api', {
       method: 'POST',
       body: JSON.stringify({
         emails: [
-          { email: 'notanemial', name: 'Finn' },
-          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
+          { email: 'finnhodgkin@gmail.com', name: 'Finn' },
+          { email: 'zoo', name: 'zooey' },
         ],
         fromEmail: from,
       }),
