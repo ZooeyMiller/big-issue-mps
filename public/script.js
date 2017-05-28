@@ -53,7 +53,6 @@ function listCandidates(candidates) {
   console.log(candidates);
   candidates.forEach(candidate => {
     const card = create('article', 'activist-candidate');
-    card.style.backgroundColor = 'red';
     const photo = create('img', 'activist-candidate__photo');
     photo.src = candidate.photo || './profile_blank.png'; //@TODO add photos to state;
     photo.alt = `picture of ${candidate.name}`;
@@ -63,11 +62,13 @@ function listCandidates(candidates) {
     party.innerText = candidate.party;
     let checkbox;
     if (candidate.email) {
-      checkbox = create('input', 'activist-candidate__checkbox');
-      checkbox.type = 'checkbox';
-      checkbox.checked = true;
-      checkbox.value = candidate.email;
-      checkbox.addEventListener('change', function(event) {
+      checkbox = create('label', 'activist-candidate__label');
+      checkboxBox = create('input', 'activist-candidate__checkbox');
+      checkbox.innerText = 'Send email: ';
+      checkboxBox.type = 'checkbox';
+      checkboxBox.checked = true;
+      checkboxBox.value = candidate.email;
+      checkboxBox.addEventListener('change', function(event) {
         const index = state.candidates.findIndex(
           candidate => candidate.email === event.target.value
         );
@@ -86,17 +87,18 @@ function listCandidates(candidates) {
           }),
         });
       });
+      checkbox.appendChild(checkboxBox);
     } else {
       checkbox = create('p', 'activist-candidate__no-email');
       checkbox.innerText = 'No email on record';
     }
+    card.appendChild(photo);
     card.appendChild(name);
     card.appendChild(party);
-    card.appendChild(photo);
     card.appendChild(checkbox);
     container.appendChild(card);
   });
-
+  normaliseHeights(document.querySelectorAll('.activist-candidate'));
   // container.appendChild(table);
   console.log('CHECK HERE', candidates);
   return {
@@ -152,3 +154,11 @@ function sendEmails(emailArr, from) {
       .catch(reject);
   });
 }
+
+const normaliseHeights = nodeList => {
+  const tallest = Math.max.apply(
+    null,
+    Array.from(nodeList).map(e => e.clientHeight)
+  );
+  nodeList.forEach(card => (card.style.height = `${tallest + 18}px`));
+};
