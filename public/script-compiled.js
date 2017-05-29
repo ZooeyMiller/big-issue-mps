@@ -1,5 +1,10 @@
 'use strict';
 
+(function() {
+  if (typeof NodeList.prototype.forEach === 'function') return false;
+  NodeList.prototype.forEach = Array.prototype.forEach;
+})();
+
 var container = document.getElementById('activist-army-container');
 var userDataForm = document.getElementById('activist-user-info');
 var emailTemplate = document.getElementById('email-template');
@@ -49,10 +54,15 @@ function create(tag, htmlClass) {
 }
 
 function showError(error) {
-  var err = create('p', 'activist-error');
-  err.innerText = error.message;
-  userDataForm.style.display = 'initial';
-  container.appendChild(err);
+  if (error.message === 'Invalid postcode') {
+    var err = create('p', 'activist-error');
+    err.innerText = error.message;
+    userDataForm.style.display = 'initial';
+    container.appendChild(err);
+  } else {
+    console.log(error);
+    throw error;
+  }
 }
 
 function listCandidates(candidates) {
