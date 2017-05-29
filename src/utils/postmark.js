@@ -21,7 +21,6 @@ const mailOut = (to, from, userInput) => {
         usermessage: userInput,
       },
     }));
-    console.log(emails);
 
     client.sendEmailBatch(emails, (err, res) => {
       if (err) return reject(err);
