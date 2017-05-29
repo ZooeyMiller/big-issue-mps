@@ -54,6 +54,7 @@
   }
 
   function showError(error) {
+    removeError();
     if (error.message === 'Invalid postcode') {
       var err = create('p', 'activist-error');
       err.innerText = error.message;
@@ -63,6 +64,17 @@
       throw error;
     }
   }
+
+  function removeError() {
+    var child = document.querySelector('.activist-error')
+    if(child){
+      var parent = child.parentElement;
+      parent.removeChild(child);
+
+    }
+  }
+
+  document.querySelector('#activist-postcode').addEventListener('change', removeError)
 
   function listCandidates(candidates) {
     hideLoader();
