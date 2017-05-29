@@ -124,6 +124,7 @@
 .pageHero .container {
   background-image: url('./aa-banner.jpg') !important;
   background-color: rgb(250, 239, 209) !important;
+  background-size: contain !important;
 }
 
 
