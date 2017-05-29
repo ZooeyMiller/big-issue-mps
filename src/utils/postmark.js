@@ -15,14 +15,12 @@ const mailOut = (to, from, userInput) => {
       To: address.email,
       ReplyTo: from.email,
       TemplateId: 1962301,
-      Name: 'Testing',
       TemplateModel: {
         candidatename: address.name,
         sendername: from.name,
         usermessage: userInput,
       },
     }));
-    console.log(emails);
 
     client.sendEmailBatch(emails, (err, res) => {
       if (err) return reject(err);

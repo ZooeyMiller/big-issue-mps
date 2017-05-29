@@ -6,7 +6,6 @@
 })();
 
 (function() {
-  console.log('hi');
   var container = document.getElementById('activist-army-container');
   var userDataForm = document.getElementById('activist-user-info');
   var emailTemplate = document.getElementById('email-template');
