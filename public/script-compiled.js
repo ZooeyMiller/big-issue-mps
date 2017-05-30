@@ -231,6 +231,8 @@
       container.innerHTML = '';
       document.getElementById('activist-army-start').scrollIntoView();
       emailTemplate.style.display = 'none';
+      document.querySelector('.activist-instructions').style.display = 'none';
+
       showLoader('Sending emails...');
       sendEmails(
         emailArr,
