@@ -200,7 +200,8 @@
     userAddition.id = 'user-addition-form';
 
     var instructions = create('h3', 'activist-instructions');
-    instructions.innerText = 'Please select the candidates you want to email.';
+    instructions.innerText =
+      "Please select which candidates you'd like to email.";
     document
       .querySelector('.post_content')
       .insertBefore(instructions, container);
