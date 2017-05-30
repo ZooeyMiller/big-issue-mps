@@ -252,8 +252,13 @@
 
     var thanks = create('h2');
     var subThanks = create('h3');
-    thanks.innerText = 'Emails successfully sent';
-    subThanks.innerText = 'Thanks for supporting The Big Issue!';
+    thanks.innerText = 'Emails successfully sent!';
+    subThanks.innerText =
+      'Thanks for taking The Big Issue campaign to your candidates - now spread the word on ';
+    var subLink = create('a');
+    subLink.innerText = 'your own social media!';
+    subLink.href = 'https://ctt.ec/GW0Ja';
+    subThanks.appendChild(subLink);
     thanks.appendChild(subThanks);
     container.appendChild(thanks);
   }
