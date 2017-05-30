@@ -66,15 +66,16 @@
   }
 
   function removeError() {
-    var child = document.querySelector('.activist-error')
-    if(child){
+    var child = document.querySelector('.activist-error');
+    if (child) {
       var parent = child.parentElement;
       parent.removeChild(child);
-
     }
   }
 
-  document.querySelector('#activist-postcode').addEventListener('change', removeError)
+  document
+    .querySelector('#activist-postcode')
+    .addEventListener('change', removeError);
 
   function listCandidates(candidates) {
     hideLoader();
@@ -193,7 +194,8 @@
       submit2.classList.add('activist-send--disabled');
     }
     var userAddition = create('textarea', 'activist--user-contribution');
-    userAddition.placeholder = 'Anything you want to add?';
+    userAddition.placeholder =
+      'Add a personal message to your candidates. Your note will appear in the [Your message here] section.';
     userAddition.id = 'user-addition-form';
 
     var instructions = create('h3', 'activist-instructions');
