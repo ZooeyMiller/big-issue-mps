@@ -45,6 +45,7 @@
         showError(res);
       });
     userDataForm.style.display = 'none';
+    document.querySelector('.activist-intro').style.display = 'none';
   });
 
   function create(tag, htmlClass) {
