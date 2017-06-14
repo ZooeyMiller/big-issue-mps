@@ -18,7 +18,14 @@ userDataForm.addEventListener('submit', function(event) {
   state.userInfo.email = event.target[1].value;
   state.userInfo.postcode = event.target[2].value;
   showLoader();
-  fetch('/api?postcode=' + event.target[2].value)
+  fetch('/api/get-candidate', {
+    method: 'POST',
+    body: JSON.stringify({
+      name: state.userInfo.name,
+      email: state.userInfo.email,
+      postcode: state.userInfo.postcode,
+    }),
+  })
     .then(function(res) {
       if (res.status !== 200) {
         throw new Error('Invalid postcode');
@@ -37,7 +44,6 @@ userDataForm.addEventListener('submit', function(event) {
       showError(res);
     });
   userDataForm.style.display = 'none';
-  //@TODO add spinner
 });
 
 function create(tag, htmlClass) {
