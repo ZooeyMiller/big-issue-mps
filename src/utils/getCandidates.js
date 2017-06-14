@@ -15,7 +15,7 @@ const fetchConstituencyInfo = postcode => {
   });
 };
 
-const fetchCandidates = constituencyId => {
+const fetchCandidate = constituencyId => {
   return new Promise((resolve, reject) => {
     request({
       uri: `https://candidates.democracyclub.org.uk/api/v0.9/posts/WMC:${constituencyId}/`,
@@ -27,20 +27,24 @@ const fetchCandidates = constituencyId => {
 };
 
 const findConstituencyId = ({ areas }) => {
-  return areas[
-    Object.keys(areas).find(e => {
-      return areas[e].type === 'WMC';
-    })
-  ].codes.gss;
-  //@TODO error handling
+  const area =
+    areas[
+      Object.keys(areas).find(e => {
+        return areas[e].type === 'WMC';
+      })
+    ].codes.gss;
+  if (!area) throw new Error('No constituency id found. Bad postcode?');
+  return area;
 };
 
-const buildCandidateUrls = ({ memberships }) => {
-  return memberships.map(object => {
-    return request({
-      uri: `https${object.person.url.slice(4)}`,
-      json: true,
-    });
+const buildCandidateUrl = ({ memberships }) => {
+  const candidate = memberships.find(object => object.elected);
+
+  if (!candidate) throw new Error('No elected candidate found.');
+
+  return request({
+    uri: `https${candidate.person.url.slice(4)}`,
+    json: true,
   });
 };
 
@@ -54,32 +58,27 @@ const findParty = ({ memberships }) => {
   return false;
 };
 
-const buildCandidates = objectArray => {
-  return objectArray
-    .map(candidate => {
-      const party = findParty(candidate);
-      //@TODO add party photo
-      if (party) {
-        return {
-          party,
-          name: candidate.name,
-          email: candidate.email,
-          photo: candidate.thumbnail,
-        };
-      }
-    })
-    .filter(e => e); //this removes falsey elements
+const buildCandidate = candidateObject => {
+  const party = findParty(candidateObject);
+
+  const candidate = {
+    party,
+    name: candidateObject.name,
+    email: candidateObject.email,
+    photo: candidateObject.thumbnail,
+  };
+
+  return candidate;
 };
 
 const getCandidates = postcode => {
   return new Promise((resolve, reject) => {
     fetchConstituencyInfo(postcode)
       .then(findConstituencyId)
-      .then(fetchCandidates)
-      .then(buildCandidateUrls)
-      .then(arr =>
-        Promise.all(arr).then(buildCandidates).then(resolve).catch(reject)
-      )
+      .then(fetchCandidate)
+      .then(buildCandidateUrl)
+      .then(buildCandidate)
+      .then(resolve)
       .catch(reject);
   });
 };
