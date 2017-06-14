@@ -39,7 +39,9 @@ userDataForm.addEventListener('submit', function(event) {
       hideLoader();
       return res;
     })
-    .then(res => setState({ mp: res }))
+    .then(res => {
+      setState({ mp: res.mp, id: res.id });
+    })
     .then(makeForm)
     .catch(res => {
       hideLoader();
