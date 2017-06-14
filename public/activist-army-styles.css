@@ -8,6 +8,16 @@
   text-align: center;
 }
 
+.activist-intro {
+  text-align: left;
+}
+
+.activist-message {
+  width: 100%;
+  box-sizing: border-box;
+  padding: .5em;
+}
+
 .activist-candidate {
   display: inline-block;
   width: 9em;
