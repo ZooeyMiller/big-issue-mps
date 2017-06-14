@@ -39,9 +39,7 @@ userDataForm.addEventListener('submit', function(event) {
       hideLoader();
       return res;
     })
-    .then(res => {
-      setState({ mp: res.mp, id: res.id });
-    })
+    .then(res => setState({ mp: res.mp, id: res.id }))
     .then(makeForm)
     .catch(res => {
       hideLoader();
@@ -63,9 +61,9 @@ const makeForm = state => {
     htmlClass: 'button',
   });
 
-  sendButton.addEventListener('click', () => {
-    console.log('hi');
-  });
+  sendButton.addEventListener('click', () =>
+    sendMail(state.id, state.userInfo.name, state.userInfo.email, state.mp.name)
+  );
 
   empty(container);
   emailTemplate.appendChild(sendButton);
@@ -73,6 +71,26 @@ const makeForm = state => {
   emailTemplate.querySelector('#mp-name').innerText = state.mp.name;
   emailTemplate.querySelector('#user-name').innerText = state.userInfo.name;
 };
+
+function sendMail(id, name, email, mpName) {
+  const userInput = getUserInput();
+  fetch('/api/send-mail', {
+    method: 'POST',
+    body: JSON.stringify({
+      id,
+      name,
+      email,
+      mpName,
+      userInput: userInput || '',
+    }),
+  });
+  //TODO ADD FEEDBACK AFTER MAIL SENT
+}
+
+function getUserInput() {
+  const textArea = document.getElementById('activist-custom-message');
+  return textArea.value;
+}
 
 function showLoader(text) {
   const loaderWrap = document.getElementById('activist-loading-container');
