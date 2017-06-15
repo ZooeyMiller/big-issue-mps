@@ -1,6 +1,6 @@
 const { sendMail } = require('../utils/postmark');
 const Joi = require('joi');
-const { getUserById } = require('../utils/database');
+const { getUserById, updateSent } = require('../utils/database');
 
 module.exports = {
   method: 'GET',
@@ -17,7 +17,9 @@ module.exports = {
           userInfo.user_input
         )
           .then(res => {
-            reply.redirect(`/success?name=${userInfo.mp_name}`);
+            updateSent(id).then(() => {
+              reply.redirect(`/success?name=${userInfo.mp_name}`);
+            });
           })
           .catch(err => {
             console.log(err);
