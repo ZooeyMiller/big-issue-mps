@@ -24,7 +24,7 @@ userDataForm.addEventListener('submit', function(event) {
   if (state.recaptcha) {
     sendCandidateData(state.userInfo, state.recaptcha);
   } else {
-    recaptchaError();
+    showError(new Error('reCAPTCHA error'));
   }
 });
 
@@ -42,11 +42,13 @@ function sendCandidateData({ name, email, postcode }, recaptcha) {
     .then(function(res) {
       if (res.status !== 200) {
         throw new Error('Invalid postcode');
-        return;
       }
       return res.json();
     })
     .then(res => {
+      if (res.error === 'recaptcha failed') {
+        throw new Error('Invalid reCAPTCHA');
+      }
       hideLoader();
       return res;
     })
@@ -137,10 +139,6 @@ function recaptchaSuccess(response) {
 
 function recaptchaExpire() {
   setState({ recaptcha: null });
-}
-
-function recaptchaError() {
-  console.log('RECAPTCHAERRRROOOOORRRRR!!!!');
 }
 
 function createCard(mp) {
