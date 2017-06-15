@@ -14,7 +14,8 @@ module.exports = {
       if (
         name === res.name &&
         email === res.email &&
-        mpName === res['mp_name']
+        mpName === res['mp_name'] &&
+        !res.verification_sent
       ) {
         sendVerificationMail(email, res.uuid, id)
           .then(res => {
@@ -24,7 +25,11 @@ module.exports = {
             return reply(err);
           });
       } else {
-        reply({ err: 'ERROR: USER INFO DID NOT MATCH' });
+        reply({
+          err: !res.verification_sent
+            ? `ERROR: VERIFICATION ALREADY SENT TO ${res.email}`
+            : 'ERROR: USER INFO DID NOT MATCH',
+        });
       }
     });
   },

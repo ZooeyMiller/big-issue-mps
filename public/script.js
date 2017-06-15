@@ -4,6 +4,7 @@ const emailTemplate = document.getElementById('email-template');
 let state = {
   userInfo: {},
   mp: null,
+  id: null,
 };
 
 function setState(stateProps) {
