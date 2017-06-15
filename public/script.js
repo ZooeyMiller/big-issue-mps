@@ -5,6 +5,7 @@ let state = {
   userInfo: {},
   mp: null,
   id: null,
+  recaptcha: null,
 };
 
 function setState(stateProps) {
@@ -20,23 +21,34 @@ userDataForm.addEventListener('submit', function(event) {
   state.userInfo.name = event.target[0].value;
   state.userInfo.email = event.target[1].value;
   state.userInfo.postcode = event.target[2].value;
+  if (state.recaptcha) {
+    sendCandidateData(state.userInfo, state.recaptcha);
+  } else {
+    showError(new Error('reCAPTCHA error'));
+  }
+});
+
+function sendCandidateData({ name, email, postcode }, recaptcha) {
   showLoader();
   fetch('/api/get-candidate', {
     method: 'POST',
     body: JSON.stringify({
-      name: state.userInfo.name,
-      email: state.userInfo.email,
-      postcode: state.userInfo.postcode,
+      name,
+      email,
+      postcode,
+      recaptcha,
     }),
   })
     .then(function(res) {
       if (res.status !== 200) {
         throw new Error('Invalid postcode');
-        return;
       }
       return res.json();
     })
     .then(res => {
+      if (res.error === 'recaptcha failed') {
+        throw new Error('Invalid reCAPTCHA');
+      }
       hideLoader();
       return res;
     })
@@ -48,7 +60,7 @@ userDataForm.addEventListener('submit', function(event) {
       showError(res);
     });
   userDataForm.style.display = 'none';
-});
+}
 
 function create(tag, { htmlClass, text }) {
   const element = document.createElement(tag);
@@ -119,6 +131,14 @@ function showError(error) {
   err.innerText = error.message;
   userDataForm.style.display = 'initial';
   container.appendChild(err);
+}
+
+function recaptchaSuccess(response) {
+  setState({ recaptcha: response });
+}
+
+function recaptchaExpire() {
+  setState({ recaptcha: null });
 }
 
 function createCard(mp) {

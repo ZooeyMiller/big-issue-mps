@@ -69,6 +69,8 @@
   <meta name="msapplication-TileColor" content="#FFFFFF" />
   <meta name="msapplication-TileImage" content="www.bigissue.com/mstile-144x144.png" />
 
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 
 <body>
@@ -224,6 +226,8 @@
 
                   <input class="activist-input" type="text" name="postcode" placeholder="Postcode..." required autocomplete="postal-code" id="activist-postcode" />
                   <button type="submit" class="button">Submit</button>
+
+                  <div class="g-recaptcha" data-sitekey="6LeYliUUAAAAAOKBgZSSwtnC_7TlFQV2IP_3y-PZ" data-callback="recaptchaSuccess" data-expired-callback="recaptchaExpire"></div>
                 </form>
               </section>
 
