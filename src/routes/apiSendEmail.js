@@ -22,14 +22,15 @@ module.exports = {
             });
           })
           .catch(err => {
-            console.log(err);
-            return reply('IT DID NOT WORK');
+            return reply.redirect(
+              '/error?error=Error%20sending%20email%20to%20MP.%20Please%20try%20again.'
+            );
           });
       } else {
         userInfo.sent
           ? reply.redirect('/error?error=Sorry,%20email%20already%20sent.')
           : reply.redirect(
-              '/error?error=We%20had%20trouble%20finding%20your%20email%20in%20our%20database'
+              '/error?error=Cannot%20find%20user%20name%20or%20email%20in%20our%20database.'
             );
       }
     });
