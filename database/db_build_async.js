@@ -7,6 +7,7 @@ const build = fs.readFileSync(path.join(__dirname, 'db_build.sql'), 'utf8');
 module.exports = () => {
   return new Promise((resolve, reject) => {
     connect.query(build, (err, res) => {
+      /* istanbul ignore if */
       if (err) return reject();
       resolve();
     });
