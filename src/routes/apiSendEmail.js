@@ -9,7 +9,6 @@ module.exports = {
     const { code, id } = req.query;
     getUserById(id).then(userInfo => {
       if (code === userInfo.uuid && !userInfo.sent) {
-        console.log(userInfo.user_input);
         sendMail(
           //TODO EMAIL THE ACTUAL MP
           { name: userInfo.mp_name, email: userInfo.email },
@@ -22,13 +21,16 @@ module.exports = {
             });
           })
           .catch(err => {
-            console.log(err);
-            return reply('IT DID NOT WORK');
+            return reply.redirect(
+              '/error?error=Error%20sending%20email%20to%20MP.%20Please%20try%20again.'
+            );
           });
       } else {
         userInfo.sent
-          ? reply('IT DID NOT WORK GETTING THE USER')
-          : reply('IT DID NOT WORK SENDING AGAIN');
+          ? reply.redirect('/error?error=Sorry,%20email%20already%20sent.')
+          : reply.redirect(
+              '/error?error=Cannot%20find%20user%20name%20or%20email%20in%20our%20database.'
+            );
       }
     });
   },
