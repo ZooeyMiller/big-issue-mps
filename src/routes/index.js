@@ -5,4 +5,5 @@ module.exports = [
   './apiSendEmail',
   './apiSendVerify',
   './success',
+  './error',
 ].map(require);

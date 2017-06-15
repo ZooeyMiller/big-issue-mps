@@ -27,8 +27,10 @@ module.exports = {
           });
       } else {
         userInfo.sent
-          ? reply('IT DID NOT WORK GETTING THE USER')
-          : reply('IT DID NOT WORK SENDING AGAIN');
+          ? reply.redirect('/error?error=Sorry,%20email%20already%20sent.')
+          : reply.redirect(
+              '/error?error=We%20had%20trouble%20finding%20your%20email%20in%20our%20database'
+            );
       }
     });
   },
