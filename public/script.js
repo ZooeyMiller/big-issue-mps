@@ -101,8 +101,9 @@ function sendMail(id, name, email, mpName) {
       mpName,
       userInput: userInput || '',
     }),
-  });
-  //TODO ADD FEEDBACK AFTER MAIL SENT
+  })
+    .then(verificationSent)
+    .catch(showError);
 }
 
 function getUserInput() {
@@ -143,6 +144,22 @@ function recaptchaSuccess(response) {
 
 function recaptchaExpire() {
   setState({ recaptcha: null });
+}
+
+function verificationSent() {
+  empty(container);
+  emailTemplate.style.display = 'none';
+  const wrap = create('div', { htmlClass: 'activist-intro' });
+
+  const title = create('h1', { text: 'Verification email sent' });
+  const para = create('p', {
+    text: 'Please click the link in your email to complete the process.',
+  });
+
+  wrap.appendChild(title);
+  wrap.appendChild(para);
+  container.appendChild(wrap);
+  window.location.href = '#activist-army-start';
 }
 
 function createCard(mp) {
