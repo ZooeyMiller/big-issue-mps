@@ -1,5 +1,5 @@
 const { sendVerificationMail } = require('../utils/postmark');
-const { getUserById } = require('../utils/database');
+const { getUserById, updateUserMessage } = require('../utils/database');
 const Joi = require('joi');
 
 module.exports = {
@@ -7,8 +7,6 @@ module.exports = {
   path: '/api/send-mail',
   handler: (req, reply) => {
     const { id, name, email, mpName, userInput } = req.payload;
-
-    //TODO ADD USERINPUT TO DB BEFORE SENDING VERIFICATION
     getUserById(id).then(res => {
       //TODO MAKE THE IF STATEMENT BELOW A NICER MODULAR FUNCTION
       if (
@@ -17,13 +15,17 @@ module.exports = {
         mpName === res['mp_name'] &&
         !res.verification_sent
       ) {
-        sendVerificationMail(email, res.uuid, id)
-          .then(res => {
-            reply({ res });
+        updateUserMessage(id, userInput)
+          .then(() => {
+            sendVerificationMail(email, res.uuid, id)
+              .then(res => {
+                reply({ res });
+              })
+              .catch(err => {
+                return reply(err);
+              });
           })
-          .catch(err => {
-            return reply(err);
-          });
+          .catch(() => reply("ERROR: couldn't  put input into database"));
       } else {
         reply({
           err: !res.verification_sent
