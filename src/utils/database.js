@@ -11,8 +11,8 @@ const query = (query, valuesArray) => {
 
 const insertUserInfoRow = ({ uuid, name, email, mpName, mpEmail }) => {
   return new Promise((resolve, reject) => {
-    const insertionQuery = `INSERT INTO emails (uuid, name, email, mp_name, mp_email, sent) VALUES ($1, $2, $3, $4, $5, $6) RETURNING ID`;
-    const insertionValues = [uuid, name, email, mpName, mpEmail, false];
+    const insertionQuery = `INSERT INTO emails (uuid, name, email, mp_name, mp_email, sent, verification_sent) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING ID`;
+    const insertionValues = [uuid, name, email, mpName, mpEmail, false, false];
     query(insertionQuery, insertionValues)
       .then(res => resolve(res.rows[0].id))
       .catch(reject);
@@ -21,7 +21,7 @@ const insertUserInfoRow = ({ uuid, name, email, mpName, mpEmail }) => {
 
 const getUserById = id => {
   return new Promise((resolve, reject) => {
-    const getQuery = `SELECT uuid, name, email, mp_name, mp_email, sent, user_input FROM emails WHERE id = $1`;
+    const getQuery = `SELECT uuid, name, email, mp_name, mp_email, sent, user_input, verification_sent FROM emails WHERE id = $1`;
     const getValue = [id];
     query(getQuery, getValue).then(res => resolve(res.rows[0])).catch(reject);
   });
@@ -29,8 +29,8 @@ const getUserById = id => {
 
 const updateUserMessage = (id, userMessage) => {
   return new Promise((resolve, reject) => {
-    const insertionQuery = `UPDATE emails SET user_input = $1 WHERE id = $2 RETURNING ID`;
-    const insertionValue = [userMessage, id];
+    const insertionQuery = `UPDATE emails SET user_input = $1, verification_sent = $2 WHERE id = $3 RETURNING ID`;
+    const insertionValue = [userMessage, true, id];
     query(insertionQuery, insertionValue)
       .then(res => resolve(res.rows[0].id))
       .catch(reject);

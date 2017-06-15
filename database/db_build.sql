@@ -10,6 +10,7 @@ CREATE TABLE emails (
   mp_name       VARCHAR(64)   NOT NULL,
   mp_email      VARCHAR(64)   NOT NULL,
   sent          BOOLEAN       NOT NULL,
+  verification_sent BOOLEAN   NOT NULL,
   user_input    VARCHAR(500)
 );
 
