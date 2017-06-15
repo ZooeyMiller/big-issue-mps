@@ -3,7 +3,7 @@ const url = require('url');
 
 const environment = require('env2');
 
-if (process.env.ENV === 'testing') {
+if (process.env.NODE_ENV === 'test') {
   environment('.config-test.env');
 } else {
   environment('.config.env');
