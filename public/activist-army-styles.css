@@ -4,6 +4,18 @@
   display: none;
 }
 
+.activist-recaptchamargin {
+  margin-top: 2.5rem;
+  margin-bottom: 0;
+}
+
+.activist-form {
+    width: 43.5rem;
+    padding: 3rem;
+    border: 1px solid rgb(180, 180, 180);
+    background-color: #f7f7f7;
+    margin: 0 auto;
+}
 #activist-army-container {
   text-align: center;
 }
@@ -37,6 +49,14 @@
 @media (max-width: 400px) {
   .activist-candidate {
     width: 8em;
+  }
+
+  .activist-form {
+    width: auto;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background-color: transparent;
   }
 }
 
