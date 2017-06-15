@@ -37,4 +37,17 @@ const updateUserMessage = (id, userMessage) => {
   });
 };
 
-module.exports = { insertUserInfoRow, getUserById, updateUserMessage };
+const updateSent = id => {
+  return new Promise((resolve, reject) => {
+    const insertionQuery = `UPDATE emails SET sent = $1 WHERE id = $2`;
+    const insertionValue = [true, id];
+    query(insertionQuery, insertionValue).then(resolve).catch(reject);
+  });
+};
+
+module.exports = {
+  insertUserInfoRow,
+  getUserById,
+  updateUserMessage,
+  updateSent,
+};
