@@ -42,6 +42,7 @@ userDataForm.addEventListener('submit', function(event) {
     })
     .then(res => setState({ mp: res.mp, id: res.id }))
     .then(makeForm)
+    .then(() => createCard(state.mp))
     .catch(res => {
       hideLoader();
       showError(res);
@@ -118,4 +119,26 @@ function showError(error) {
   err.innerText = error.message;
   userDataForm.style.display = 'initial';
   container.appendChild(err);
+}
+
+function createCard(mp) {
+  const card = create('article', {
+    htmlClass: 'mw5 center bg-white br3 pa3 pa4-ns mv3 ba b--black-10',
+  });
+  const centerer = create('div', { htmlClass: 'tc' });
+  const candidateImage = create('img', {
+    htmlClass: 'br-100 h4 w4 dib ba b--black-05 pa2',
+  });
+  candidateImage.alt = `Picture of ${mp.name}`;
+  candidateImage.src = mp.photo;
+  centerer.appendChild(candidateImage);
+  const mpName = create('h1', { htmlClass: 'f3 mb2', text: mp.name });
+  centerer.appendChild(mpName);
+  const mpParty = create('h2', {
+    htmlClass: 'f5 fw4 gray mt0',
+    text: mp.party,
+  });
+  centerer.appendChild(mpParty);
+  card.appendChild(centerer);
+  container.appendChild(card);
 }
