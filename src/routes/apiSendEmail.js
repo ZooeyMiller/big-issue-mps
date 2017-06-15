@@ -1,34 +1,42 @@
-const postmark = require('../utils/postmark');
+const { sendMail } = require('../utils/postmark');
 const Joi = require('joi');
+const { getUserById } = require('../utils/database');
 
 module.exports = {
-  method: 'POST',
-  path: '/api',
+  method: 'GET',
+  path: '/api/send-email',
   handler: (req, reply) => {
-    const { emails, fromEmail, userInput } = req.payload;
-    postmark(emails, fromEmail, userInput)
-      .then(res => {
-        reply({ res });
-      })
-      .catch(err => {
-        console.log(err);
-        return reply(err);
-      });
+    const { code, id } = req.query;
+    console.log('test');
+
+    getUserById(id).then(userInfo => {
+      if (code === userInfo.uuid && !userInfo.sent) {
+        console.log(userInfo.userInput);
+        sendMail(
+          //TODO EMAIL THE ACTUAL MP
+          { name: userInfo.mp_name, email: userInfo.email },
+          { name: userInfo.name, email: userInfo.email },
+          userInfo.user_input
+        )
+          .then(res => {
+            reply.redirect(`/success?name=${userInfo.mp_name}`);
+          })
+          .catch(err => {
+            console.log(err);
+            return reply('IT DID NOT WORK');
+          });
+      } else {
+        userInfo.sent
+          ? reply('IT DID NOT WORK GETTING THE USER')
+          : reply('IT DID NOT WORK SENDING AGAIN');
+      }
+    });
   },
   config: {
     validate: {
-      payload: {
-        emails: Joi.array().items(
-          Joi.object().keys({
-            email: Joi.string().email(),
-            name: Joi.string().min(1),
-          })
-        ),
-        fromEmail: Joi.object().keys({
-          email: Joi.string().email(),
-          name: Joi.string().min(1),
-        }),
-        userInput: Joi.any(),
+      query: {
+        code: Joi.string().max(40),
+        id: Joi.number().integer(),
       },
     },
   },
