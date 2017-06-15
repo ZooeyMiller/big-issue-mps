@@ -7,20 +7,19 @@ module.exports = {
   method: 'POST',
   path: '/api/get-candidate',
   handler: (req, reply) => {
-    console.log(req.payload.postcode);
     getCandidates(req.payload.postcode)
-      .then(candidate => {
-        console.log('candidate is', candidate);
+      .then(mp => {
         insertUserInfoRow({
-          mpName: candidate.name,
-          mpEmail: candidate.email,
+          mpName: mp.name,
+          mpEmail: mp.email,
           name: req.payload.name,
           email: req.payload.email,
           uuid: uuid(),
         })
-          .then(() => {
-            console.log('.then is happening, saved to db');
-            reply(candidate);
+          .then(id => {
+            const mpObject = Object.assign({}, mp);
+            mpObject.email = mpObject.email ? true : false;
+            reply({ mp: mpObject, id });
           })
           .catch(err => {
             console.log('insert into db failed ---', err);

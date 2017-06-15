@@ -1,15 +1,17 @@
-var container = document.getElementById('activist-army-container');
-var userDataForm = document.getElementById('activist-user-info');
+const container = document.getElementById('activist-army-container');
+const userDataForm = document.getElementById('activist-user-info');
 const emailTemplate = document.getElementById('email-template');
-var state = {
+let state = {
   userInfo: {},
-  candidates: [],
+  mp: null,
 };
 
 function setState(stateProps) {
   Object.keys(stateProps).forEach(function(propName) {
     state[propName] = stateProps[propName];
   });
+
+  return state;
 }
 
 userDataForm.addEventListener('submit', function(event) {
@@ -35,9 +37,9 @@ userDataForm.addEventListener('submit', function(event) {
     })
     .then(res => {
       hideLoader();
-      return listCandidates(res);
+      return res;
     })
-    .then(setState)
+    .then(res => setState({ mp: res.mp, id: res.id }))
     .then(makeForm)
     .catch(res => {
       hideLoader();
@@ -46,217 +48,48 @@ userDataForm.addEventListener('submit', function(event) {
   userDataForm.style.display = 'none';
 });
 
-function create(tag, htmlClass) {
-  var element = document.createElement(tag);
-  element.className = htmlClass;
+function create(tag, { htmlClass, text }) {
+  const element = document.createElement(tag);
+  element.className = htmlClass ? htmlClass : '';
+  element.innerText = text ? text : '';
   return element;
 }
 
-function showError(error) {
-  const err = create('p', 'activist-error');
-  err.innerText = error.message;
-  userDataForm.style.display = 'initial';
-  container.appendChild(err);
-}
-
-function listCandidates(candidates) {
-  hideLoader();
-  emailTemplate.style.display = 'inherit';
-  const senderName = create('p');
-  senderName.innerText = state.userInfo.name;
-  const senderPostcode = create('p');
-  senderPostcode.innerText = state.userInfo.postcode;
-  emailTemplate.appendChild(senderName);
-  emailTemplate.appendChild(senderPostcode);
-  console.log(candidates);
-  candidates.forEach(candidate => {
-    const label = create('label', 'activist-candidate__card-label');
-    label.for = 'checkboxBox';
-    const card = create('article', 'activist-candidate');
-    const photo = create('img', 'activist-candidate__photo');
-    photo.src = candidate.photo || './profile_blank.png'; //@TODO add photos to state;
-    photo.alt = `picture of ${candidate.name}`;
-    const name = create('h2', 'activist-candidate__name');
-    name.innerText = candidate.name;
-    const party = create('h3', 'activist-candidate__party');
-    party.innerText = candidate.party;
-    let checkbox;
-    if (candidate.email) {
-      checkbox = create('label', 'activist-candidate__label');
-      checkboxBox = create('input', 'activist-candidate__checkbox');
-      checkbox.innerText = 'Send email: ';
-      checkboxBox.type = 'checkbox';
-      card.className += ' activist-candidate--selected';
-      checkboxBox.checked = true;
-      checkboxBox.value = candidate.email;
-      checkboxBox.addEventListener('change', checkboxHandler);
-      checkbox.appendChild(checkboxBox);
-    } else {
-      checkbox = create('p', 'activist-candidate__no-email');
-      checkbox.innerText = 'No email';
-    }
-    card.appendChild(photo);
-    card.appendChild(name);
-    card.appendChild(party);
-    card.appendChild(checkbox);
-    label.appendChild(card);
-    container.appendChild(label);
+const makeForm = state => {
+  const sendButton = create('button', {
+    text: 'Send email',
+    htmlClass: 'button',
   });
-  normaliseHeights(document.querySelectorAll('.activist-candidate'));
-  return {
-    candidates: candidates.map(function(c) {
-      return {
-        name: c.name,
-        party: c.party,
-        email: c.email,
-        photo: c.photo,
-        checked: c.email ? true : false,
-      };
-    }),
-  };
-}
 
-function checkboxHandler(event) {
-  const index = state.candidates.findIndex(
-    candidate => candidate.email === event.target.value
+  sendButton.addEventListener('click', () =>
+    sendMail(state.id, state.userInfo.name, state.userInfo.email, state.mp.name)
   );
-  const card = event.target.parentElement.parentElement;
-  if (event.target.checked) {
-    card.classList.add('activist-candidate--selected');
-  } else {
-    card.classList.remove('activist-candidate--selected');
-  }
-  setState({
-    candidates: state.candidates.map((c, i) => {
-      if (i === index) {
-        return {
-          name: c.name,
-          email: c.email,
-          party: c.party,
-          photo: c.photo,
-          checked: event.target.checked,
-        };
-      }
-      return c;
-    }),
-  });
-  if (state.candidates.every(candidate => !candidate.checked)) {
-    document
-      .getElementById('activist-send')
-      .classList.add('activist-send--disabled');
-  } else {
-    document
-      .getElementById('activist-send')
-      .classList.remove('activist-send--disabled');
-  }
-}
 
-const makeForm = () => {
-  const submit = create('button', 'button');
-  submit.innerText = 'Send emails';
-  submit.id = 'activist-send';
-  if (state.candidates.every(candidate => !candidate.checked)) {
-    submit.classList.add('activist-send--disabled');
-  }
-  const userAddition = create('textarea', 'activist--user-contribution');
-  userAddition.placeholder = 'Anything you want to add?';
-
-  const instructions = create('h3', 'activist-instructions');
-  instructions.innerText = 'Please select the candidates you want to email.';
-  document.querySelector('.post_content').insertBefore(instructions, container);
-  container.appendChild(submit);
-  container.appendChild(userAddition);
-  submit.addEventListener('click', event => {
-    event.preventDefault();
-
-    if (state.candidates.some(candidate => candidate.checked)) {
-      // console.log(userAddition.value);
-      const emailArr = state.candidates
-        .filter(candidate => candidate.checked)
-        .map(candidate => ({ email: candidate.email, name: candidate.name }));
-
-      container.innerHTML = '';
-      document.getElementById('activist-army-start').scrollIntoView();
-      emailTemplate.style.display = 'none';
-      showLoader('Sending emails...');
-      sendEmails(
-        emailArr,
-        {
-          email: state.userInfo.email,
-          name: state.userInfo.name,
-        },
-        userAddition.value
-      )
-        .then(emailSent)
-        .catch(emailError);
-    }
-  });
+  empty(container);
+  emailTemplate.appendChild(sendButton);
+  emailTemplate.style.display = 'inherit';
+  emailTemplate.querySelector('#mp-name').innerText = state.mp.name;
+  emailTemplate.querySelector('#user-name').innerText = state.userInfo.name;
 };
 
-function emailSent() {
-  document.getElementById('activist-army-start').scrollIntoView();
-  container.innerHTML = '';
-  emailTemplate.style.display = 'none';
-
-  const thanks = create('h2');
-  const subThanks = create('h3');
-  thanks.innerText = 'Emails successfully sent';
-  subThanks.innerText = 'Thanks for supporting The Big Issue!';
-  thanks.appendChild(subThanks);
-  container.appendChild(thanks);
-}
-
-function emailError(res) {
-  document.getElementById('activist-army-start').scrollIntoView();
-  container.innerHTML = '';
-  emailTemplate.style.display = 'none';
-  console.log(res);
-
-  if (res.error && res.error.findIndex(email => email.ErrorCode === 0) === -1) {
-    const errorHeader = create('h2');
-    errorHeader.innerText = 'Error';
-    const error = create('p');
-    error.id = 'activist-email-error';
-    error.innerText = 'The email delivery failed. ';
-    const errorLink = create('a');
-    errorLink.href = '#';
-    errorLink.innerText = 'Click here to try again.';
-    error.appendChild(errorLink);
-    errorLink.addEventListener('click', e => {
-      e.preventDefault();
-      window.location.reload();
-    });
-    container.appendChild(errorHeader);
-    container.appendChild(error);
-  } else {
-    emailSent();
-  }
-}
-
-function sendEmails(emailArr, from, userInput) {
-  return new Promise((reject, resolve) => {
-    fetch('/api', {
-      method: 'POST',
-      body: JSON.stringify({
-        emails: [
-          { email: 'finnhodgkin@gmail.com', name: 'Finn' },
-          { email: 'zooeyxmiller@gmail.com', name: 'zooey' },
-        ],
-        fromEmail: from,
-        userInput,
-      }),
-    })
-      .then(res => {
-        hideLoader();
-        return res.json();
-      })
-      .then(resolve)
-      .catch(res => {
-        hideLoader();
-        console.log('happening');
-        return reject(res);
-      });
+function sendMail(id, name, email, mpName) {
+  const userInput = getUserInput();
+  fetch('/api/send-mail', {
+    method: 'POST',
+    body: JSON.stringify({
+      id,
+      name,
+      email,
+      mpName,
+      userInput: userInput || '',
+    }),
   });
+  //TODO ADD FEEDBACK AFTER MAIL SENT
+}
+
+function getUserInput() {
+  const textArea = document.getElementById('activist-custom-message');
+  return textArea.value;
 }
 
 function showLoader(text) {
@@ -273,10 +106,15 @@ function hideLoader() {
     .classList.remove('activist-loading-container--show');
 }
 
-const normaliseHeights = nodeList => {
-  const tallest = Math.max.apply(
-    null,
-    Array.from(nodeList).map(e => e.clientHeight)
-  );
-  nodeList.forEach(card => (card.style.height = `${tallest + 18}px`));
-};
+function empty(node) {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+}
+
+function showError(error) {
+  const err = create('p', 'activist-error');
+  err.innerText = error.message;
+  userDataForm.style.display = 'initial';
+  container.appendChild(err);
+}

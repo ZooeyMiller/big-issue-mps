@@ -201,16 +201,18 @@
               </div>
 
               <p>&nbsp;</p>
-              <section class="activist-intro">
-              <h2>Ask your candidates to support the #ActivistArmy!</h2>
 
-              <p>Armies of Big Issue activists have been challenging candidates about their plans to dismantle poverty. The parties have been listening and we've put prevention at the heart of this campaign. Now we need to keep it there.</p>
-              <p>The election is just around the corner. We need you to take up The Big Issue call and ask your candidates to support our campaign for a Prevention Unit.</p>
-              <p>We've created an email tool to make this as easy as possible, just remember to keep an eye out for your candidates' replies!</p>
-              <p>With the support of your candidates, we can build up an alliance that will guarantee - whoever's in No. 10 and whoever's your MP - that poverty prevention will be their top priority.</p>
-              <p>Ready to take action? Type in your details below and then spread the word!</p>
-            </section>
               <section id="activist-army-container">
+                <section class="activist-intro">
+                  <h2>Ask your MP to support the #ActivistArmy!</h2>
+
+                  <p>Armies of Big Issue activists have been challenging candidates about their plans to dismantle poverty. The parties have been listening and we've put prevention at the heart of this campaign. Now we need to keep it there.</p>
+                  <p>The election is just around the corner. We need you to take up The Big Issue call and ask your candidates to support our campaign for a Prevention Unit.</p>
+                  <p>We've created an email tool to make this as easy as possible, just remember to keep an eye out for your candidates' replies!</p>
+                  <p>With the support of your candidates, we can build up an alliance that will guarantee - whoever's in No. 10 and whoever's your MP - that poverty prevention will be their top priority.</p>
+                  <p>Ready to take action? Type in your details below and then spread the word!</p>
+                </section>
+
                 <form action="" method="post" class="activist-form" id="activist-user-info">
                   <label class="activist-label" for="activist-name">Full name</label>
                   <input class="activist-input" type="text" name="name" placeholder="Full name..." required autocomplete="name" id="activist-name" />
@@ -235,7 +237,7 @@
               </div>
 
       <section id="email-template" class="activist-email-template">
-        <p>Dear [<i>candidate name here</i>],</p>
+        <p>Dear <span id="mp-name">MP's NAME</span>,</p>
         <p>As a member of <i>The Big Issue</i> Activist Army, and as my local candidate, I need your help.</p>
         <p><a target="_blank" href="https://twitter.com/search?q=%23activistarmy">We’ve been working</a> to put <b>poverty prevention</b> at the heart of this election. <a target="_blank" href="http://www.bigissue.com/news/big-issues-prevention-manifesto">Our manifesto is clear.</a> With <a target="_blank" href="https://www.jrf.org.uk/press/half-million-rise-number-people-poverty-shows-britain-isnt-working-everyone">14 million</a> people living in poverty - and the failure to deal with the effects of poverty costing <a target="_blank" href="https://www.jrf.org.uk/press/poverty-costs-uk-78-billion-year">£78 billion</a> a year - prevention should be at the heart of every policy when it comes to poverty.</p>
         <p><strong>With just days to go to 8 June, we’re calling on you - and every other candidate, and every party leader - to endorse the plan for a Prevention Unit.</strong></p>
@@ -243,8 +245,11 @@
         <p>A top-level taskforce at the centre of government with a vital mission: to find out what works, and what needs to change, to dismantle the roots of poverty. A hub for ideas, a bridge across departments, and a watchful eye, checking that policies offer a hand-up out of poverty.</p>
         <p>Your backing is vital. A public endorsement that you’re backing the Prevention Unit will spark a groundswell of support. Social media is easiest, as below, but if you don’t use Twitter or Facebook, let me know and I’ll pass on the message to <i>The Big Issue</i>:</p>
         <a target="_blank" href="https://ctt.ec/3Cfgx"><p><strong>I'm with @BigIssue #ActivistArmy: a Prevention Unit would keep poverty at the top of the agenda - are you on board? www.activistarmy.co.uk</strong></p></a>
-        <p>[<i>your message here</i>]</p>
+        <textarea id="activist-custom-message" class="activist-message" placeholder="Enter a custom message..." rows="2"></textarea>
         <p>Thanks for your consideration. It'd be great to have you on side.</p>
+        <p>Kind regards,<br/>
+        <span id="user-name">USER'S NAME</span>
+        </p>
 
 
 
