@@ -2,6 +2,7 @@ const tape = require('tape');
 const {
   query,
   insertUserInfoRow,
+  getUserById,
   updateUserMessage,
   updateSent,
 } = require('../src/utils/database');
@@ -66,6 +67,38 @@ tape('insertUserInfoRow adds a user to the database', t => {
         });
       });
   });
+});
+
+tape('getUserById returns a user', t => {
+  const values = {
+    uuid: '1',
+    name: '2',
+    email: '3',
+    mpName: '4',
+    mpEmail: '5',
+  };
+  const result = {
+    uuid: '1',
+    name: '2',
+    email: '3',
+    mp_name: '4',
+    mp_email: '5',
+    sent: false,
+    user_input: null,
+    verification_sent: false,
+  };
+
+  t.plan(2);
+  resetDb()
+    .then(() => getUserById(1))
+    .then(res => {
+      t.equal(undefined, res, "Users that don't exist return undefined");
+    })
+    .then(() => insertUserInfoRow(values))
+    .then(res => getUserById(res))
+    .then(user => {
+      t.deepEqual(result, user, 'Returns correct user');
+    });
 });
 
 tape('updateUserMessage updates the user info message by row id', t => {
