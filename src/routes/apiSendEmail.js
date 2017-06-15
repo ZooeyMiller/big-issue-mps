@@ -19,7 +19,7 @@ module.exports = {
           userInfo.user_input
         )
           .then(res => {
-            reply.redirect('/success');
+            reply.redirect(`/success?name=${userInfo.mp_name}`);
           })
           .catch(err => {
             console.log(err);
