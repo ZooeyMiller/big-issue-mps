@@ -9,7 +9,6 @@ module.exports = {
     const { code, id } = req.query;
     getUserById(id).then(userInfo => {
       if (code === userInfo.uuid && !userInfo.sent) {
-        console.log(userInfo.user_input);
         sendMail(
           //TODO EMAIL THE ACTUAL MP
           { name: userInfo.mp_name, email: userInfo.email },
