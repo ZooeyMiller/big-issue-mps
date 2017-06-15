@@ -54,7 +54,11 @@ function sendCandidateData({ name, email, postcode }, recaptcha) {
     })
     .then(res => setState({ mp: res.mp, id: res.id }))
     .then(makeForm)
-    .then(() => createCard(state.mp))
+    .then(() => {
+      createTemplateCopy();
+      createCard(state.mp);
+      window.location.href = '#activist-army-start';
+    })
     .catch(res => {
       hideLoader();
       showError(res);
@@ -161,4 +165,21 @@ function createCard(mp) {
   centerer.appendChild(mpParty);
   card.appendChild(centerer);
   container.appendChild(card);
+}
+
+function createTemplateCopy() {
+  const tempContainer = create('section', { htmlClass: 'activist-intro' });
+  const title = create('h2', {
+    text: 'Ask your MP to support the #ActivistArmy!',
+  });
+  const instructions = create('p', {
+    text: `Take a look at the email we'll send below, add anything extra you want to tell your MP in the box provided, then click 'Send Email'`,
+  });
+  const instructionsTwo = create('p', {
+    text: `We'll send a confirmation email to the email address you provided to make sure you're you, click the link in there and we'll send the email to your MP!`,
+  });
+  tempContainer.appendChild(title);
+  tempContainer.appendChild(instructions);
+  tempContainer.appendChild(instructionsTwo);
+  container.appendChild(tempContainer);
 }
