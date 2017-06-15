@@ -46,6 +46,7 @@ const updateSent = id => {
 };
 
 module.exports = {
+  query,
   insertUserInfoRow,
   getUserById,
   updateUserMessage,
