@@ -1,4 +1,4 @@
-const getCandidates = require('./../utils/getCandidates');
+const { getCandidates } = require('./../utils/getCandidates');
 const Joi = require('joi');
 const uuid = require('uuid/v1');
 const { insertUserInfoRow } = require('../utils/database');

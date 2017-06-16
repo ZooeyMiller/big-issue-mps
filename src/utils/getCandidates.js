@@ -37,11 +37,14 @@ const findConstituencyId = ({ areas }) => {
   return area;
 };
 
-const buildCandidateUrl = ({ memberships }) => {
+const findMp = ({ memberships }) => {
   const candidate = memberships.find(object => object.elected);
 
   if (!candidate) throw new Error('No elected candidate found.');
+  return candidate;
+};
 
+const buildCandidateUrl = candidate => {
   return request({
     uri: `https${candidate.person.url.slice(4)}`,
     json: true,
@@ -76,6 +79,7 @@ const getCandidates = postcode => {
     fetchConstituencyInfo(postcode)
       .then(findConstituencyId)
       .then(fetchCandidate)
+      .then(findMp)
       .then(buildCandidateUrl)
       .then(buildCandidate)
       .then(resolve)
@@ -83,4 +87,13 @@ const getCandidates = postcode => {
   });
 };
 
-module.exports = getCandidates;
+module.exports = {
+  getCandidates,
+  buildCandidate,
+  buildCandidateUrl,
+  findMp,
+  findParty,
+  findConstituencyId,
+  fetchConstituencyInfo,
+  fetchCandidate,
+};
