@@ -272,3 +272,87 @@ tape('Testing findMp', t => {
     'Should throw an error if no candidate found'
   );
 });
+
+tape('Testing findConstituencyId', t => {
+  t.plan(2);
+  const testObject = {
+    areas: {
+      '41946': {
+        parent_area: null,
+        generation_high: 31,
+        all_names: {},
+        id: 41946,
+        codes: {
+          ons: 'E02000873',
+        },
+        name: 'Tower Hamlets 010',
+        country: 'E',
+        type_name: '2001 Middle Layer Super Output Area (Generalised)',
+        generation_low: 13,
+        country_name: 'England',
+        type: 'OMG',
+      },
+      '65853': {
+        parent_area: null,
+        generation_high: 31,
+        all_names: {},
+        id: 65853,
+        codes: {
+          gss: 'E14000555',
+          unit_id: '25070',
+        },
+        name: 'Bethnal Green and Bow',
+        country: 'E',
+        type_name: 'UK Parliament constituency',
+        generation_low: 13,
+        country_name: 'England',
+        type: 'WMC',
+      },
+    },
+  };
+  const testObjectTwo = {
+    areas: {
+      '41946': {
+        parent_area: null,
+        generation_high: 31,
+        all_names: {},
+        id: 41946,
+        codes: {
+          ons: 'E02000873',
+        },
+        name: 'Tower Hamlets 010',
+        country: 'E',
+        type_name: '2001 Middle Layer Super Output Area (Generalised)',
+        generation_low: 13,
+        country_name: 'England',
+        type: 'OMG',
+      },
+      '65853': {
+        parent_area: null,
+        generation_high: 31,
+        all_names: {},
+        id: 65853,
+        codes: {
+          gss: '',
+          unit_id: '25070',
+        },
+        name: 'Bethnal Green and Bow',
+        country: 'E',
+        type_name: 'UK Parliament constituency',
+        generation_low: 13,
+        country_name: 'England',
+        type: 'WMC',
+      },
+    },
+  };
+  t.equal(
+    findConstituencyId(testObject),
+    'E14000555',
+    'Should return area code when present'
+  );
+  t.throws(
+    () => findConstituencyId(testObjectTwo),
+    /No constituency id found. Bad postcode?/,
+    'Should throw an error when no constituency id found'
+  );
+});
