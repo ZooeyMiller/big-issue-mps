@@ -38,7 +38,7 @@ module.exports = {
     validate: {
       query: {
         code: Joi.string().max(40).required(),
-        id: Joi.number().integer().required(),
+        id: Joi.number().integer().min(1).required(),
       },
     },
   },

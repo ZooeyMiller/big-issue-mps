@@ -40,7 +40,7 @@ module.exports = {
     validate: {
       payload: {
         postcode: Joi.string().max(12).required(),
-        email: Joi.string().email().required(),
+        email: Joi.string().email().required().max(64),
         name: Joi.string().max(64).required(),
         recaptcha: Joi.string().required(),
       },
