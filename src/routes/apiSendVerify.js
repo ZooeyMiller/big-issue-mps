@@ -38,10 +38,10 @@ module.exports = {
   config: {
     validate: {
       payload: {
-        id: Joi.number().integer(),
-        email: Joi.string().email(),
-        name: Joi.string().min(1),
-        mpName: Joi.string().min(1),
+        id: Joi.number().integer().required(),
+        email: Joi.string().email().required(),
+        name: Joi.string().min(1).required(),
+        mpName: Joi.string().min(1).required(),
         userInput: Joi.any(),
       },
     },
