@@ -39,10 +39,10 @@ module.exports = {
   config: {
     validate: {
       payload: {
-        postcode: Joi.string().max(12),
-        email: Joi.string().email(),
-        name: Joi.string().max(64),
-        recaptcha: Joi.string(),
+        postcode: Joi.string().max(12).required(),
+        email: Joi.string().email().required().max(64),
+        name: Joi.string().max(64).required(),
+        recaptcha: Joi.string().required(),
       },
     },
   },
